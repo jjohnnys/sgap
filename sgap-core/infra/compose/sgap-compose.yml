@@ -1,0 +1,12 @@
+version: '1'
+services:
+  postgres-sgap:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: sgap
+      POSTGRES_PASSWORD: sgap@01
+      POSTGRES_DB: sgapdb
+      PGPASSWORD: sgap@01
+    ports:
+      - "5432:5432"
+
