@@ -21,34 +21,40 @@ public class PacienteJDBC implements PacienteRepository {
     }
 
     public Paciente insert(Paciente paciente) {
-        String sql = "INSERT INTO paciente (nome, cpf, rg, data_nascimento, escolaridade, profissao, genero, endereco, observacao) values (:nome, :cpf, :rg, :dataNascimento, :escolaridade, :profissao, :genero, :endereco, :observacao)";
+        String sql = "INSERT INTO paciente (nome, cpf_cnpj, rg, fisica_juridica, data_nascimento, escolaridade, profissao, genero, endereco, status, observacao, depen_resp) values (:nome, :cpfCnpj, :rg, :fisicaJuridica, :dataNascimento, :escolaridade, :profissao, :genero, :endereco, :status, :observacao, :depenResp)";
         jdbcClient.sql(sql)
         .param("nome", paciente.getNome())
-        .param("cpf", paciente.getCpf())
+        .param("cpfCnpj", paciente.getCpfCnpj().getValor())
         .param("rg", paciente.getRg())
+        .param("fisicaJuridica", paciente.getFisicaJuridica().getValor())
         .param("dataNascimento", paciente.getDataNascimento())
         .param("escolaridade", paciente.getEscolaridade())
         .param("profissao", paciente.getProfissao())
         .param("genero", paciente.getGenero())
         .param("endereco", paciente.getEndereco())
-        .param("observacao", paciente.getObservacao()).update();
+        .param("status", paciente.getStatus())
+        .param("observacao", paciente.getObservacao())
+        .param("depenResp", paciente.getDepenResp().getValor()).update();
         Long idCriado = jdbcClient.sql("SELECT lastval()").query(Long.class).single();
         return findById(idCriado);
     }
 
     public Paciente update(Paciente paciente) {
-        String sql = "UPDATE paciente SET , nome = :nome, cpf = :cpf, rg = :rg, dataNascimento = :dataNascimento, escolaridade = :escolaridade, profissao = :profissao, genero = :genero, endereco = :endereco, observacao = :observacao WHERE id = :id";
+        String sql = "UPDATE paciente SET , nome = :nome, cpf_cnpj = :cpfCnpj, rg = :rg, fisica_juridica = :fisicaJuridica, data_nascimento = :dataNascimento, escolaridade = :escolaridade, profissao = :profissao, genero = :genero, endereco = :endereco, observacao = :observacao WHERE id = :id";
         jdbcClient.sql(sql)
             .param("id", paciente.getId())
             .param("nome", paciente.getNome())
-            .param("cpf", paciente.getCpf())
+            .param("cpfCnpj", paciente.getCpfCnpj().getValor())
             .param("rg", paciente.getRg())
-            .param("dataNascimento", paciente.getCpf())
+            .param("fisicaJuridica", paciente.getFisicaJuridica().getValor())
+            .param("dataNascimento", paciente.getDataNascimento())
             .param("escolaridade", paciente.getEscolaridade())
             .param("profissao", paciente.getProfissao())
             .param("genero", paciente.getGenero())
             .param("endereco", paciente.getEndereco())
-            .param("observacao", paciente.getObservacao()).update();
+            .param("status", paciente.getStatus())
+            .param("observacao", paciente.getObservacao())
+            .param("depenResp", paciente.getDepenResp().getValor()).update();
         return findById(paciente.getId());
     }
     

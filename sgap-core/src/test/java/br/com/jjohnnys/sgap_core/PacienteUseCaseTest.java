@@ -8,9 +8,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import br.com.jjohnnys.sgap_core.paciente.application.dto.PacienteDTO;
+import br.com.jjohnnys.sgap_core.paciente.application.enums.DepenRespEnum;
+import br.com.jjohnnys.sgap_core.paciente.application.use_case.CadastrarPacienteUserCase;
 import br.com.jjohnnys.sgap_core.paciente.domain.Paciente;
 import br.com.jjohnnys.sgap_core.paciente.repository.jdbc.PacienteRepository;
-import br.com.jjohnnys.sgap_core.paciente.use_case.CadastrarPacienteUserCase;
 
 @SpringBootTest
 public class PacienteUseCaseTest {
@@ -22,11 +24,10 @@ public class PacienteUseCaseTest {
 
         @Test
         public void criarUsuarioTest() {
-                Paciente paciente = new Paciente(null, "Dom Pedro II", "111.111.111.11", "11.111.111-1", LocalDate.of(1925, 12, 02), "Super Doutor", "Imperador", "Masculino", "Rua do Imperador", "CDF");
-                cadastrarPacienteUserCase.execute(paciente);
+                PacienteDTO pacienteDTO = new PacienteDTO(null, "Dom Pedro II", "043.153.290-70", "11.111.111-1", 'F', LocalDate.of(1925, 12, 02), "Super Doutor", "Imperador", "Masculino", "Rua do Imperador", "Ativo", "CDF", DepenRespEnum.MAIOR_IDADE.getValor());
+                cadastrarPacienteUserCase.execute(pacienteDTO);
                 Paciente pacienteSalvo = pacienteRepository.findByNome("Dom Pedro II");
                 assertEquals("Dom Pedro II", pacienteSalvo.getNome());
-
         }
 
 

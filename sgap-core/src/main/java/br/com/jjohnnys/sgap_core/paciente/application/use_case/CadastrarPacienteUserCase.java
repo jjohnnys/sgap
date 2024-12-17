@@ -1,7 +1,8 @@
-package br.com.jjohnnys.sgap_core.paciente.use_case;
+package br.com.jjohnnys.sgap_core.paciente.application.use_case;
 
 import org.springframework.stereotype.Service;
 
+import br.com.jjohnnys.sgap_core.paciente.application.dto.PacienteDTO;
 import br.com.jjohnnys.sgap_core.paciente.domain.Paciente;
 import br.com.jjohnnys.sgap_core.paciente.repository.jdbc.PacienteRepository;
 
@@ -14,9 +15,9 @@ public class CadastrarPacienteUserCase {
         this.pacienteRepository = pacienteRepository;
     }
 
-    public void execute(Paciente paciente) {
+    public void execute(PacienteDTO pacienteDTO) {
 
-        pacienteRepository.insert(paciente);
+        pacienteRepository.insert(pacienteDTO.criarPaciente());
 
     }
 
