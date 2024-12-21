@@ -24,7 +24,7 @@ public class PacienteUseCaseTest {
 
         @Test
         public void criarUsuarioTest() {
-                PacienteDTO pacienteDTO = new PacienteDTO(null, "Dom Pedro II", "043.153.290-70", "11.111.111-1", 'F', LocalDate.of(1925, 12, 02), "Super Doutor", "Imperador", "Masculino", "Rua do Imperador", "Ativo", "CDF", DepenRespEnum.MAIOR_IDADE.getValor());
+                PacienteDTO pacienteDTO = new PacienteDTO(null, "Dom Pedro II", "043.153.290-70", "11.111.111-1", 'F', LocalDate.of(1925, 12, 02), "Doutorado", "Masculino", "Imperador", "Rua do Imperador", "Ativo", "CDF", DepenRespEnum.MAIOR_IDADE.getValor());
                 cadastrarPacienteUserCase.execute(pacienteDTO);
                 Paciente pacienteSalvo = pacienteRepository.findByNome("Dom Pedro II");
                 assertEquals("Dom Pedro II", pacienteSalvo.getNome());

@@ -23,7 +23,7 @@ public enum FisicaJuridicaEnum {
         return Stream.of(FisicaJuridicaEnum.values())
         .filter(fisicaJuridicaEnum -> fisicaJuridicaEnum.getValor().equals(valor))
         .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("Informacao de pessoa Fisica ou Juridica invalido: " + valor));
+        .orElseThrow(() -> new IllegalArgumentException(String.format("Informacao %s sobre pessoa Fisica ou Juridica invalido: ", valor)));
     }
     
 }

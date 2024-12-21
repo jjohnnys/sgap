@@ -20,7 +20,7 @@ public enum DepenRespEnum {
         return Stream.of(DepenRespEnum.values())
         .filter(depenRespEnum -> depenRespEnum.getValor().equals(valor))
         .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("Valor de responsabilidade invalido: " + valor));
+        .orElseThrow(() -> new IllegalArgumentException(String.format("O valor %s para responsabilidade e invalido: ", valor)));
     }
     
 }
