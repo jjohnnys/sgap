@@ -1,6 +1,7 @@
 package br.com.jjohnnys.sgap_core.paciente.domain;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import br.com.jjohnnys.sgap_core.paciente.application.enums.EscolaridadeEnum;
 import br.com.jjohnnys.sgap_core.paciente.application.enums.FisicaJuridicaEnum;
@@ -25,6 +26,7 @@ public class Paciente {
     private StatusAtendimentoEnum status;
     private String observacao;
     private Boolean dependente;
+    List<Responsavel> responsaveis;
 
     public Long getId() {
         return id;
@@ -64,6 +66,17 @@ public class Paciente {
     }
     public Boolean isDependente() {
         return dependente;
-    }    
+    }
+    public List<Responsavel> getResponsaveis() {
+        return responsaveis;
+    }  
+
+    public boolean validaDependenteResponsaveis() {
+        if(!dependente && (responsaveis != null || !responsaveis.isEmpty())) return false;
+        if(dependente && (responsaveis == null || responsaveis.isEmpty())) return false;
+        return true;
+    }
+    
+    
 
 }

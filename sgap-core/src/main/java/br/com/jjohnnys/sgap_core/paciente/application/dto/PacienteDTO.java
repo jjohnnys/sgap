@@ -1,13 +1,14 @@
 package br.com.jjohnnys.sgap_core.paciente.application.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
-import br.com.jjohnnys.sgap_core.paciente.application.enums.DepenRespEnum;
 import br.com.jjohnnys.sgap_core.paciente.application.enums.EscolaridadeEnum;
 import br.com.jjohnnys.sgap_core.paciente.application.enums.FisicaJuridicaEnum;
 import br.com.jjohnnys.sgap_core.paciente.application.enums.GeneroEnum;
 import br.com.jjohnnys.sgap_core.paciente.application.enums.StatusAtendimentoEnum;
 import br.com.jjohnnys.sgap_core.paciente.domain.Paciente;
+import br.com.jjohnnys.sgap_core.paciente.domain.Responsavel;
 import br.com.jjohnnys.sgap_core.paciente.domain.value_object.CpfCnpj;
 import br.com.jjohnnys.sgap_core.paciente.domain.value_object.Rg;
 
@@ -24,7 +25,8 @@ public record PacienteDTO(
     String endereco,
     String status,
     String observacao,
-    Boolean dependente) {
+    Boolean dependente,
+    List<ResponsavelDTO> responsaveisDTOs) {
 
 
     public Paciente criarPaciente() {
@@ -41,7 +43,8 @@ public record PacienteDTO(
             endereco,
             StatusAtendimentoEnum.getStatusAtendimentoEnumPorValor(status),
             observacao,
-            dependente);
+            dependente,
+            getResponsaveis());
     }
 
     public static PacienteDTO criarPacienteDTO(Paciente paciente) {
@@ -58,7 +61,40 @@ public record PacienteDTO(
             paciente.getEndereco(),
             paciente.getStatus().getValor(),
             paciente.getObservacao(),
-            paciente.getDependente());
+            paciente.isDependente(),
+            getResponsaveisDTOs(paciente.getResponsaveis())) ;
+    }
+
+    private List<Responsavel> getResponsaveis() {
+        if(responsaveisDTOs == null) return null;
+        return responsaveisDTOs.stream()
+                .map( responsavelDTO -> 
+                new Responsavel(
+                    responsavelDTO.id(),
+                    responsavelDTO.nome(),
+                    new CpfCnpj(responsavelDTO.cpfCnpnj(), FisicaJuridicaEnum.getFisicaJuridicaEnumPorValor(responsavelDTO.fisicaJuridica())),
+                    new Rg(responsavelDTO.rg()),
+                    FisicaJuridicaEnum.getFisicaJuridicaEnumPorValor(responsavelDTO.fisicaJuridica()),
+                    responsavelDTO.dataNascimento(),
+                    responsavelDTO.profissao(),
+                    responsavelDTO.endereco(),
+                    responsavelDTO.observacao())).toList();
+    }
+
+    private static List<ResponsavelDTO> getResponsaveisDTOs(List<Responsavel> responsavels) {
+        if(responsavels == null) return null;
+        return responsavels.stream()
+                .map( responsavel -> 
+                new ResponsavelDTO(
+                    responsavel.getId(),
+                    responsavel.getNome(),
+                    responsavel.getCpfCnpj().getValor(),
+                    responsavel.getRg().getValor(),
+                    responsavel.getFisicaJuridica().getValor(),
+                    responsavel.getDataNascimento(),
+                    responsavel.getProfissao(),
+                    responsavel.getEndereco(),
+                    responsavel.getObservacao())).toList();
     }
     
 }
