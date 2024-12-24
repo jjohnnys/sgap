@@ -24,7 +24,7 @@ public record PacienteDTO(
     String endereco,
     String status,
     String observacao,
-    String depenResp) {
+    Boolean dependente) {
 
 
     public Paciente criarPaciente() {
@@ -41,7 +41,7 @@ public record PacienteDTO(
             endereco,
             StatusAtendimentoEnum.getStatusAtendimentoEnumPorValor(status),
             observacao,
-            DepenRespEnum.getDepenRespEnumPorValor(depenResp));
+            dependente);
     }
 
     public static PacienteDTO criarPacienteDTO(Paciente paciente) {
@@ -58,7 +58,7 @@ public record PacienteDTO(
             paciente.getEndereco(),
             paciente.getStatus().getValor(),
             paciente.getObservacao(),
-            paciente.getDepenResp().getValor());
+            paciente.getDependente());
     }
     
 }

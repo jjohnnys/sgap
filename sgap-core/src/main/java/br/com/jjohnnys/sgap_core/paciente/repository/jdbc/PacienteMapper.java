@@ -32,7 +32,7 @@ public class PacienteMapper implements RowMapper<Paciente> {
             rs.getString(10),
             StatusAtendimentoEnum.getStatusAtendimentoEnumPorValor(rs.getString(11)),
             rs.getString(12),
-            DepenRespEnum.getDepenRespEnumPorValor(rs.getString(13)));
+            rs.getBoolean(13));
         return paciente;    
     }
 

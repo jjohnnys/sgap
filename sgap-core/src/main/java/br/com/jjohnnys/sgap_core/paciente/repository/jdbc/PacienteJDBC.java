@@ -21,7 +21,7 @@ public class PacienteJDBC implements PacienteRepository {
     }
 
     public Paciente insert(Paciente paciente) {
-        String sql = "INSERT INTO paciente (nome, cpf_cnpj, rg, fisica_juridica, data_nascimento, escolaridade, profissao, genero, endereco, status, observacao, depen_resp) values (:nome, :cpfCnpj, :rg, :fisicaJuridica, :dataNascimento, :escolaridade, :profissao, :genero, :endereco, :status, :observacao, :depenResp)";
+        String sql = "INSERT INTO paciente (nome, cpf_cnpj, rg, fisica_juridica, data_nascimento, escolaridade, profissao, genero, endereco, status, observacao, dependente) values (:nome, :cpfCnpj, :rg, :fisicaJuridica, :dataNascimento, :escolaridade, :profissao, :genero, :endereco, :status, :observacao, :dependente)";
         jdbcClient.sql(sql)
         .param("nome", paciente.getNome())
         .param("cpfCnpj", paciente.getCpfCnpj().getValor())
@@ -34,7 +34,7 @@ public class PacienteJDBC implements PacienteRepository {
         .param("endereco", paciente.getEndereco())
         .param("status", paciente.getStatus().getValor())
         .param("observacao", paciente.getObservacao())
-        .param("depenResp", paciente.getDepenResp().getValor()).update();
+        .param("dependente", paciente.getDependente()).update();
         Long idCriado = jdbcClient.sql("SELECT lastval()").query(Long.class).single();
         return findById(idCriado);
     }
@@ -54,7 +54,7 @@ public class PacienteJDBC implements PacienteRepository {
             .param("endereco", paciente.getEndereco())
             .param("status", paciente.getStatus().getValor())
             .param("observacao", paciente.getObservacao())
-            .param("depenResp", paciente.getDepenResp().getValor()).update();
+            .param("dependente", paciente.getDependente()).update();
         return findById(paciente.getId());
     }
     
