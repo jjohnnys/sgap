@@ -10,9 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import br.com.jjohnnys.sgap_core.paciente.application.dto.PacienteDTO;
 import br.com.jjohnnys.sgap_core.paciente.application.enums.DepenRespEnum;
-import br.com.jjohnnys.sgap_core.paciente.application.use_case.CadastrarPacienteUserCase;
+import br.com.jjohnnys.sgap_core.paciente.application.usecases.CadastrarPacienteUserCase;
 import br.com.jjohnnys.sgap_core.paciente.domain.Paciente;
-import br.com.jjohnnys.sgap_core.paciente.repository.jdbc.PacienteRepository;
+import br.com.jjohnnys.sgap_core.paciente.infrastructure.gateways.jdbc.PacienteRepository;
 
 @SpringBootTest
 public class PacienteUseCaseTest {

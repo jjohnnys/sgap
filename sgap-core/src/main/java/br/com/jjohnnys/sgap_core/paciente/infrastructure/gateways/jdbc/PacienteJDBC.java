@@ -1,4 +1,4 @@
-package br.com.jjohnnys.sgap_core.paciente.repository.jdbc;
+package br.com.jjohnnys.sgap_core.paciente.infrastructure.gateways.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import br.com.jjohnnys.sgap_core.paciente.domain.Paciente;
 
 @Repository
-public class PacienteJDBC implements PacienteRepository {
+public class PacienteJDBC {
 
     @Autowired
     private JdbcClient jdbcClient;
@@ -34,7 +34,7 @@ public class PacienteJDBC implements PacienteRepository {
         .param("endereco", paciente.getEndereco())
         .param("status", paciente.getStatus().getValor())
         .param("observacao", paciente.getObservacao())
-        .param("dependente", paciente.getDependente()).update();
+        .param("dependente", paciente.isDependente()).update();
         Long idCriado = jdbcClient.sql("SELECT lastval()").query(Long.class).single();
         return findById(idCriado);
     }
@@ -54,7 +54,7 @@ public class PacienteJDBC implements PacienteRepository {
             .param("endereco", paciente.getEndereco())
             .param("status", paciente.getStatus().getValor())
             .param("observacao", paciente.getObservacao())
-            .param("dependente", paciente.getDependente()).update();
+            .param("dependente", paciente.isDependente()).update();
         return findById(paciente.getId());
     }
     

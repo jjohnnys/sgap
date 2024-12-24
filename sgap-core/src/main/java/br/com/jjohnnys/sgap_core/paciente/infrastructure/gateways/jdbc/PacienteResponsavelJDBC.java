@@ -1,4 +1,4 @@
-package br.com.jjohnnys.sgap_core.paciente.repository.jdbc;
+package br.com.jjohnnys.sgap_core.paciente.infrastructure.gateways.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
