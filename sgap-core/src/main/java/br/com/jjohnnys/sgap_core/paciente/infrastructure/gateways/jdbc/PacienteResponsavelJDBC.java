@@ -11,10 +11,10 @@ public class PacienteResponsavelJDBC {
     private JdbcClient jdbcClient;
 
     public void insert(Long idPaciente, Long idResponsavel) {
-        String sql = "INSERT INTO paciente_responsavel (id_pacinte, id_resposavel) values (:id_pacinte, :id_responsavel)";
+        String sql = "INSERT INTO paciente_responsavel (id_paciente, id_responsavel) values (:id_paciente, :id_responsavel)";
         jdbcClient.sql(sql)
-        .param("id_pacinte", idPaciente)
-        .param("id_resposavel", idResponsavel).update();
+        .param("id_paciente", idPaciente)
+        .param("id_responsavel", idResponsavel).update();
     }
     
 }

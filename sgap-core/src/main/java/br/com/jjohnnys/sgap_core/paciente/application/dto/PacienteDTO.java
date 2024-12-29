@@ -1,7 +1,11 @@
 package br.com.jjohnnys.sgap_core.paciente.application.dto;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import br.com.jjohnnys.sgap_core.paciente.application.enums.EscolaridadeEnum;
 import br.com.jjohnnys.sgap_core.paciente.application.enums.FisicaJuridicaEnum;
@@ -26,7 +30,7 @@ public record PacienteDTO(
     String status,
     String observacao,
     Boolean dependente,
-    List<ResponsavelDTO> responsaveisDTOs) {
+    Set<ResponsavelDTO> responsaveisDTOs) {
 
 
     public Paciente criarPaciente() {
@@ -65,23 +69,23 @@ public record PacienteDTO(
             getResponsaveisDTOs(paciente.getResponsaveis())) ;
     }
 
-    private List<Responsavel> getResponsaveis() {
+    private Set<Responsavel> getResponsaveis() {
         if(responsaveisDTOs == null) return null;
         return responsaveisDTOs.stream()
-                .map( responsavelDTO -> 
-                new Responsavel(
-                    responsavelDTO.id(),
-                    responsavelDTO.nome(),
-                    new CpfCnpj(responsavelDTO.cpfCnpnj(), FisicaJuridicaEnum.getFisicaJuridicaEnumPorValor(responsavelDTO.fisicaJuridica())),
-                    new Rg(responsavelDTO.rg()),
-                    FisicaJuridicaEnum.getFisicaJuridicaEnumPorValor(responsavelDTO.fisicaJuridica()),
-                    responsavelDTO.dataNascimento(),
-                    responsavelDTO.profissao(),
-                    responsavelDTO.endereco(),
-                    responsavelDTO.observacao())).toList();
+        .map( responsavelDTO -> 
+        new Responsavel(
+            responsavelDTO.id(),
+            responsavelDTO.nome(),
+            new CpfCnpj(responsavelDTO.cpfCnpnj(), FisicaJuridicaEnum.getFisicaJuridicaEnumPorValor(responsavelDTO.fisicaJuridica())),
+            new Rg(responsavelDTO.rg()),
+            FisicaJuridicaEnum.getFisicaJuridicaEnumPorValor(responsavelDTO.fisicaJuridica()),
+            responsavelDTO.dataNascimento(),
+            responsavelDTO.profissao(),
+            responsavelDTO.endereco(),
+            responsavelDTO.observacao())).collect(Collectors.toSet());
     }
 
-    private static List<ResponsavelDTO> getResponsaveisDTOs(List<Responsavel> responsavels) {
+    public static Set<ResponsavelDTO> getResponsaveisDTOs(Set<Responsavel> responsavels) {
         if(responsavels == null) return null;
         return responsavels.stream()
                 .map( responsavel -> 
@@ -94,7 +98,7 @@ public record PacienteDTO(
                     responsavel.getDataNascimento(),
                     responsavel.getProfissao(),
                     responsavel.getEndereco(),
-                    responsavel.getObservacao())).toList();
+                    responsavel.getObservacao())).collect(Collectors.toSet());
     }
     
 }

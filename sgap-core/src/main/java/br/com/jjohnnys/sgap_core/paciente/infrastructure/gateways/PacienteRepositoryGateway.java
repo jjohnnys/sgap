@@ -1,5 +1,8 @@
 package br.com.jjohnnys.sgap_core.paciente.infrastructure.gateways;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
 import br.com.jjohnnys.sgap_core.paciente.application.gateways.PacienteDsGateway;
@@ -25,7 +28,11 @@ public class PacienteRepositoryGateway implements PacienteDsGateway {
 
     @Override
     public Paciente findByNome(String nome) {
-        return pacienteJDBC.findByNome(nome);
+        Paciente paciente = pacienteJDBC.findByNome(nome);
+        if(paciente == null) return null;
+        List<Responsavel> responsaveis = responsavelJDBC.findByPacienteId(paciente.getId());
+        responsaveis.stream().forEach(paciente::adicionaResponsavel);
+        return paciente;
     }
 
     @Override
@@ -46,5 +53,7 @@ public class PacienteRepositoryGateway implements PacienteDsGateway {
         pacienteResponsavelJDBC.insert(paciente.getId(), responsavelSalvo.getId());
         return responsavelSalvo;
     }
+
+    
     
 }

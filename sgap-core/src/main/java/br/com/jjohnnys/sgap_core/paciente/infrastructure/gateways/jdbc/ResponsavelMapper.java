@@ -22,9 +22,9 @@ public class ResponsavelMapper implements RowMapper<Responsavel> {
             new Rg(rs.getString(4)),
             FisicaJuridicaEnum.getFisicaJuridicaEnumPorValor(rs.getString(5).charAt(0)),
             LocalDate.parse(rs.getString(6)),
-            rs.getString(9),
-            rs.getString(10),
-            rs.getString(12));
+            rs.getString(7),
+            rs.getString(8),
+            rs.getString(9));
         return responsavel;
     }    
 }

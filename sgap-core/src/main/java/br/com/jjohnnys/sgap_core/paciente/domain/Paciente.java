@@ -1,7 +1,11 @@
 package br.com.jjohnnys.sgap_core.paciente.domain;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import br.com.jjohnnys.sgap_core.paciente.application.enums.EscolaridadeEnum;
 import br.com.jjohnnys.sgap_core.paciente.application.enums.FisicaJuridicaEnum;
@@ -26,7 +30,7 @@ public class Paciente {
     private StatusAtendimentoEnum status;
     private String observacao;
     private Boolean dependente;
-    List<Responsavel> responsaveis;
+    private Set<Responsavel> responsaveis = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -67,14 +71,18 @@ public class Paciente {
     public Boolean isDependente() {
         return dependente;
     }
-    public List<Responsavel> getResponsaveis() {
-        return responsaveis;
+    public Set<Responsavel> getResponsaveis() {
+        return Collections.unmodifiableSet(responsaveis);
     }  
 
     public boolean validaDependenteResponsaveis() {
-        if(!dependente && (responsaveis != null || !responsaveis.isEmpty())) return false;
-        if(dependente && (responsaveis == null || responsaveis.isEmpty())) return false;
+        if(!dependente && Optional.ofNullable(responsaveis).isPresent()) return false;
+        if(dependente && Optional.ofNullable(responsaveis).isEmpty()) return false;
         return true;
+    }
+
+    public void adicionaResponsavel(Responsavel responsavel) {       
+        responsaveis.add(responsavel);        
     }
     
     

@@ -1,5 +1,7 @@
 package br.com.jjohnnys.sgap_core.paciente.infrastructure.gateways.jdbc;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
@@ -7,9 +9,8 @@ import org.springframework.stereotype.Repository;
 import br.com.jjohnnys.sgap_core.paciente.domain.Responsavel;
 
 @Repository
-public class ResponsavelJDBC implements ResponsavelRepository {
-
-    @Autowired
+public class ResponsavelJDBC {
+    
     private JdbcClient jdbcClient;
 
     public Responsavel findById(Long id) {
@@ -19,12 +20,11 @@ public class ResponsavelJDBC implements ResponsavelRepository {
     public Responsavel findByNome(String nome) {
         return jdbcClient.sql("SELECT * FROM responsavel WHERE nome = ?").param(nome).query(new ResponsavelMapper()).optional().get();
     }
-
-    @Override
-    public Responsavel findByPacienteId(Long idPaciente) {
+    
+    public List<Responsavel> findByPacienteId(Long idPaciente) {
         String sql = "select r.id, r.nome, r.cpf_cnpj, r.rg, r.fisica_juridica, r.data_nascimento, r.profissao, r.endereco, r.observacao \r\n" + //
                         "from responsavel r left outer join paciente_responsavel pr on r.id = pr.id_responsavel and pr.id_paciente = ?";
-        return jdbcClient.sql(sql).param(idPaciente).query(new ResponsavelMapper()).optional().get();
+        return jdbcClient.sql(sql).param(idPaciente).query(new ResponsavelMapper()).list();
     }
 
     public Responsavel insert(Responsavel responsavel) {
