@@ -14,7 +14,9 @@ import br.com.jjohnnys.sgap_core.paciente.application.enums.StatusAtendimentoEnu
 import br.com.jjohnnys.sgap_core.paciente.domain.Paciente;
 import br.com.jjohnnys.sgap_core.paciente.domain.Responsavel;
 import br.com.jjohnnys.sgap_core.paciente.domain.value_object.CpfCnpj;
+import br.com.jjohnnys.sgap_core.paciente.domain.value_object.Email;
 import br.com.jjohnnys.sgap_core.paciente.domain.value_object.Rg;
+import br.com.jjohnnys.sgap_core.paciente.domain.value_object.Telefone;
 
 public record PacienteDTO(
     Long id,
@@ -30,7 +32,9 @@ public record PacienteDTO(
     String status,
     String observacao,
     Boolean dependente,
-    Set<ResponsavelDTO> responsaveisDTOs) {
+    Set<ResponsavelDTO> responsaveisDTOs,
+    String email,
+    Set<String> telefones) {
 
 
     public Paciente criarPaciente() {
@@ -48,7 +52,9 @@ public record PacienteDTO(
             StatusAtendimentoEnum.getStatusAtendimentoEnumPorValor(status),
             observacao,
             dependente,
-            getResponsaveis());
+            getResponsaveis(),
+            new Email(email),
+            toSetTelefones(telefones));
     }
 
     public static PacienteDTO criarPacienteDTO(Paciente paciente) {
@@ -66,7 +72,9 @@ public record PacienteDTO(
             paciente.getStatus().getValor(),
             paciente.getObservacao(),
             paciente.isDependente(),
-            getResponsaveisDTOs(paciente.getResponsaveis())) ;
+            getResponsaveisDTOs(paciente.getResponsaveis()),
+            paciente.getEmail().getValor(),
+            toListStringTelefones(paciente.getTelefones()));
     }
 
     private Set<Responsavel> getResponsaveis() {
@@ -82,7 +90,9 @@ public record PacienteDTO(
             responsavelDTO.dataNascimento(),
             responsavelDTO.profissao(),
             responsavelDTO.endereco(),
-            responsavelDTO.observacao())).collect(Collectors.toSet());
+            responsavelDTO.observacao(),
+            new Email(responsavelDTO.email()),
+            toSetTelefones(telefones))).collect(Collectors.toSet());
     }
 
     public static Set<ResponsavelDTO> getResponsaveisDTOs(Set<Responsavel> responsavels) {
@@ -98,7 +108,18 @@ public record PacienteDTO(
                     responsavel.getDataNascimento(),
                     responsavel.getProfissao(),
                     responsavel.getEndereco(),
-                    responsavel.getObservacao())).collect(Collectors.toSet());
+                    responsavel.getObservacao(),
+                    responsavel.getEmail().getValor(),
+                    toListStringTelefones(responsavel.getTelefones()))).collect(Collectors.toSet());
     }
+
+    private Set<Telefone> toSetTelefones(Set<String> telefones) {
+        return telefones.stream().map(Telefone::new).collect(Collectors.toSet());
+    }
+
+    private static Set<String> toListStringTelefones(Set<Telefone> telefones) {
+        return telefones.stream().map(Telefone::getValor).collect(Collectors.toSet());
+    }
+    
     
 }

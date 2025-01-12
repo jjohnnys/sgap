@@ -1,21 +1,18 @@
 package br.com.jjohnnys.sgap_core.paciente.domain.value_object;
 
-import java.util.List;
-
 import br.com.jjohnnys.sgap_core.paciente.domain.exception.DadosPacienteException;
 import io.micrometer.common.util.StringUtils;
 import lombok.Getter;
 
-public class Rg {
+public class Telefone {
 
     @Getter
     private String valor;
 
-    public Rg(String valor) {        
-        if(StringUtils.isBlank(valor))
-            throw new DadosPacienteException(String.format("O valor de RG não pode ser nulo")); 
+    public Telefone(String valor) {        
+        if(StringUtils.isBlank(valor)) return;
         if(valor.length() < 9)    
-            throw new DadosPacienteException(String.format("O valor %s para RG é invalido", valor));
+            throw new DadosPacienteException(String.format("Valor %s para telefone é invalido", valor));
         this.valor = valor;
     }
     

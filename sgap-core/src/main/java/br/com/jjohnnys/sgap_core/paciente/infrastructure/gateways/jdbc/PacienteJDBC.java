@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
 import br.com.jjohnnys.sgap_core.paciente.domain.Paciente;
+import br.com.jjohnnys.sgap_core.paciente.domain.value_object.Telefone;
 
 @Repository
 public class PacienteJDBC {
@@ -21,7 +22,7 @@ public class PacienteJDBC {
     }
 
     public Paciente insert(Paciente paciente) {
-        String sql = "INSERT INTO paciente (nome, cpf_cnpj, rg, fisica_juridica, data_nascimento, escolaridade, profissao, genero, endereco, status, observacao, dependente) values (:nome, :cpfCnpj, :rg, :fisicaJuridica, :dataNascimento, :escolaridade, :profissao, :genero, :endereco, :status, :observacao, :dependente)";
+        String sql = "INSERT INTO paciente (nome, cpf_cnpj, rg, fisica_juridica, data_nascimento, escolaridade, profissao, genero, endereco, status, observacao, dependente, email, telefones) values (:nome, :cpfCnpj, :rg, :fisicaJuridica, :dataNascimento, :escolaridade, :profissao, :genero, :endereco, :status, :observacao, :dependente,  :email, :telefones)";
         jdbcClient.sql(sql)
         .param("nome", paciente.getNome())
         .param("cpfCnpj", paciente.getCpfCnpj().getValor())
@@ -34,7 +35,9 @@ public class PacienteJDBC {
         .param("endereco", paciente.getEndereco())
         .param("status", paciente.getStatus().getValor())
         .param("observacao", paciente.getObservacao())
-        .param("dependente", paciente.isDependente()).update();
+        .param("dependente", paciente.isDependente())
+        .param("email", paciente.getEmail().getValor())
+        .param("telefones", String.join(",", paciente.getTelefones().stream().map(Telefone::getValor).toList())).update();
         Long idCriado = jdbcClient.sql("SELECT lastval()").query(Long.class).single();
         return findById(idCriado);
     }
@@ -54,8 +57,18 @@ public class PacienteJDBC {
             .param("endereco", paciente.getEndereco())
             .param("status", paciente.getStatus().getValor())
             .param("observacao", paciente.getObservacao())
-            .param("dependente", paciente.isDependente()).update();
+            .param("dependente", paciente.isDependente())
+            .param("email", paciente.getEmail())
+            .param("telefones", paciente.getTelefones() != null ? paciente.getTelefones().stream().map(Telefone::getValor).toList() : null).update();
         return findById(paciente.getId());
+    }
+
+    public int deleteById(Long id) {
+        return jdbcClient.sql("DELETE FROM paciente  WHERE id = ?").param(id).update();
+    }
+
+    public int deleteAll() {
+        return jdbcClient.sql("DELETE FROM paciente").update();
     }
     
 

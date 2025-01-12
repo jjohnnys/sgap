@@ -17,8 +17,13 @@ public class CpfCnpj {
         try {            
             if(StringUtils.isBlank(valor))
                 throw new DadosPacienteException(String.format("O valor de %s não pode ser nulo", fisicaJuridica.getDescricao()));
-            CPFValidator cpfValidator = new CPFValidator(true);        
-            cpfValidator.assertValid(valor);        
+            if(FisicaJuridicaEnum.F.equals(fisicaJuridica.F)) {
+                CPFValidator cpfValidator = new CPFValidator(true);        
+                cpfValidator.assertValid(valor);        
+            } else {
+                CNPJValidator cnpjValidator = new CNPJValidator(true);        
+                cnpjValidator.assertValid(valor);
+            }
         } catch (InvalidStateException e) {
             throw new DadosPacienteException(String.format("O valor %s e invalido para %s", valor, fisicaJuridica.getDescricao()));
         }            

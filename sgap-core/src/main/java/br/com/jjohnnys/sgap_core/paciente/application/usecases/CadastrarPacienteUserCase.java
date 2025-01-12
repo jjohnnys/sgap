@@ -21,8 +21,10 @@ public class CadastrarPacienteUserCase {
         Paciente pacienteSalvo = pacienteDsGateway.savePaciente(paciente);
         if(!paciente.validaDependenteResponsaveis())
                 throw new DadosPacienteException("Paciente dependente deve ter dados do responsavel");
-        if(paciente.isDependente())        
+        if(paciente.isDependente())
             paciente.getResponsaveis().forEach(responsavel -> pacienteDsGateway.saveResponsavel(responsavel, pacienteSalvo));
+        
+        
         
     }
 

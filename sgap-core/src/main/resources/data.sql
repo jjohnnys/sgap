@@ -15,7 +15,9 @@ create table paciente (
     endereco varchar (100),
     status varchar (50),
     observacao varchar(500),
-    dependente boolean
+    dependente boolean,
+    email varchar (70),
+    telefones varchar (50)
 );
 
 create table responsavel (
@@ -27,7 +29,9 @@ create table responsavel (
     data_nascimento date,
     profissao varchar(10),
     endereco varchar (100),
-    observacao varchar(500)
+    observacao varchar(500),
+    email varchar (70),
+    telefones varchar (50)
 );
 
 
