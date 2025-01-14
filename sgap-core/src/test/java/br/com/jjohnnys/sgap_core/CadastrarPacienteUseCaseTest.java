@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +22,7 @@ import br.com.jjohnnys.sgap_core.paciente.infrastructure.gateways.jdbc.PacienteJ
 import br.com.jjohnnys.sgap_core.paciente.infrastructure.gateways.jdbc.ResponsavelJDBC;
 
 @SpringBootTest
-public class PacienteUseCaseTest {
+public class CadastrarPacienteUseCaseTest {
 
         @Autowired
         private CadastrarPacienteUserCase  cadastrarPacienteUserCase;
@@ -45,8 +46,8 @@ public class PacienteUseCaseTest {
         public void criarUsuarioTest() {
                 PacienteDTO pacienteDTO = new PacienteDTO(null, "Dom Pedro II", "043.153.290-70", "11.111.111-1", 'F', LocalDate.of(1825, 12, 02), "Doutorado", "Masculino", "Imperador", "Rua do Imperador", "Ativo", "CDF", false, null, "imperador@brasil.com.br", Set.of("21111111111","11111111111"));
                 cadastrarPacienteUserCase.execute(pacienteDTO);
-                Paciente pacienteSalvo = pacienteDsGateway.findByNome("Dom Pedro II");
-                assertEquals("Dom Pedro II", pacienteSalvo.getNome());
+                Optional<Paciente> pacienteSalvo = pacienteDsGateway.findPacienteByNome("Dom Pedro II");
+                assertEquals("Dom Pedro II", pacienteSalvo.get().getNome());
         }
 
         @Test
@@ -54,9 +55,9 @@ public class PacienteUseCaseTest {
                 ResponsavelDTO responsavelDTO = new ResponsavelDTO(null, "Dom Pedro II", "043.153.290-70", "11.111.111-1", 'F', LocalDate.of(1825, 12, 02), "Imperador", "Rua do Imperador", "Imperador", "imperador@brasil.com.br", Set.of("21111111111","11111111111"));        
                 PacienteDTO pacienteDTO = new PacienteDTO(null, "Princesa Isabel", "632.516.100-90", "11.111.111-2", 'F', LocalDate.of(1846, 07, 29), "Doutorado", "Feminino", "Princesa", "Rua da Princesa", "Ativo", "CDF", true, Set.of(responsavelDTO), "princesa@brasil.com.br", Set.of("2111111111","11111111112"));
                 cadastrarPacienteUserCase.execute(pacienteDTO);
-                Paciente pacienteSalvo = pacienteDsGateway.findByNome("Princesa Isabel");
-                assertEquals("Princesa Isabel", pacienteSalvo.getNome());
-                assertEquals("Dom Pedro II", pacienteSalvo.getResponsaveis().stream().findFirst().get().getNome());
+                Optional<Paciente> pacienteSalvo = pacienteDsGateway.findPacienteByNome("Princesa Isabel");
+                assertEquals("Princesa Isabel", pacienteSalvo.get().getNome());
+                assertEquals("Dom Pedro II", pacienteSalvo.get().getResponsaveis().stream().findFirst().get().getNome());
         }
 
         @Test
@@ -71,7 +72,4 @@ public class PacienteUseCaseTest {
                 PacienteDTO pacienteDTO = new PacienteDTO(null, "Princesa Isabel", "632.516.100-90", "11.111.111-2", 'F', LocalDate.of(1846, 07, 29), "Doutorado", "Feminino", "Princesa", "Rua da Princesa", "Ativo", "CDF", false, Set.of(responsavelDTO), "princesa@brasil.com.br", Set.of("2111111111, 11111111111"));                
                 assertThrows(DadosPacienteException.class, () -> cadastrarPacienteUserCase.execute(pacienteDTO));
         }
-
-
-    
 }

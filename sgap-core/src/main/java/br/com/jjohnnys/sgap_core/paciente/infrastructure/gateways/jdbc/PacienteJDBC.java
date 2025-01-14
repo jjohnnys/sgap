@@ -1,5 +1,7 @@
 package br.com.jjohnnys.sgap_core.paciente.infrastructure.gateways.jdbc;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
@@ -13,12 +15,12 @@ public class PacienteJDBC {
     @Autowired
     private JdbcClient jdbcClient;
 
-    public Paciente findById(Long id) {
-        return jdbcClient.sql("SELECT * FROM paciente WHERE id = ?").param(id).query(new PacienteMapper()).optional().get();
+    public Optional<Paciente> findById(Long id) {
+        return jdbcClient.sql("SELECT * FROM paciente WHERE id = ?").param(id).query(new PacienteMapper()).optional();
     }
 
-    public Paciente findByNome(String nome) {
-        return jdbcClient.sql("SELECT * FROM paciente WHERE nome = ?").param(nome).query(new PacienteMapper()).optional().get();
+    public Optional<Paciente> findByNome(String nome) {
+        return jdbcClient.sql("SELECT * FROM paciente WHERE nome = ?").param(nome).query(new PacienteMapper()).optional();
     }
 
     public Paciente insert(Paciente paciente) {
@@ -39,7 +41,7 @@ public class PacienteJDBC {
         .param("email", paciente.getEmail().getValor())
         .param("telefones", String.join(",", paciente.getTelefones().stream().map(Telefone::getValor).toList())).update();
         Long idCriado = jdbcClient.sql("SELECT lastval()").query(Long.class).single();
-        return findById(idCriado);
+        return findById(idCriado).get();
     }
 
     public Paciente update(Paciente paciente) {
@@ -60,10 +62,10 @@ public class PacienteJDBC {
             .param("dependente", paciente.isDependente())
             .param("email", paciente.getEmail())
             .param("telefones", paciente.getTelefones() != null ? paciente.getTelefones().stream().map(Telefone::getValor).toList() : null).update();
-        return findById(paciente.getId());
+        return findById(paciente.getId()).get();
     }
 
-    public int deleteById(Long id) {
+    public int delete(Long id) {
         return jdbcClient.sql("DELETE FROM paciente  WHERE id = ?").param(id).update();
     }
 

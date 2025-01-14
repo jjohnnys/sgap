@@ -1,12 +1,12 @@
 package br.com.jjohnnys.sgap_core.paciente.infrastructure.gateways.jdbc;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
 import br.com.jjohnnys.sgap_core.paciente.domain.Responsavel;
-import br.com.jjohnnys.sgap_core.paciente.domain.value_object.Email;
 import br.com.jjohnnys.sgap_core.paciente.domain.value_object.Telefone;
 import lombok.AllArgsConstructor;
 
@@ -16,12 +16,12 @@ public class ResponsavelJDBC {
     
     private JdbcClient jdbcClient;
 
-    public Responsavel findById(Long id) {
-        return jdbcClient.sql("SELECT * FROM responsavel WHERE id = ?").param(id).query(new ResponsavelMapper()).optional().get();
+    public Optional<Responsavel> findById(Long id) {
+        return jdbcClient.sql("SELECT * FROM responsavel WHERE id = ?").param(id).query(new ResponsavelMapper()).optional();
     }
 
-    public Responsavel findByNome(String nome) {
-        return jdbcClient.sql("SELECT * FROM responsavel WHERE nome = ?").param(nome).query(new ResponsavelMapper()).optional().get();
+    public Optional<Responsavel> findByNome(String nome) {
+        return jdbcClient.sql("SELECT * FROM responsavel WHERE nome = ?").param(nome).query(new ResponsavelMapper()).optional();
     }
     
     public List<Responsavel> findByPacienteId(Long idPaciente) {
@@ -44,7 +44,7 @@ public class ResponsavelJDBC {
         .param("email", responsavel.getEmail().getValor())
         .param("telefones", String.join(",",responsavel.getTelefones().stream().map(Telefone::getValor).toList())).update();
         Long idCriado = jdbcClient.sql("SELECT lastval()").query(Long.class).single();
-        return findById(idCriado);
+        return findById(idCriado).get();
     }
 
     public Responsavel update(Responsavel responsavel) {
@@ -61,10 +61,10 @@ public class ResponsavelJDBC {
             .param("observacao", responsavel.getObservacao())
             .param("email", responsavel.getObservacao())
             .param("telefones", responsavel.getObservacao()).update();
-        return findById(responsavel.getId());
+        return findById(responsavel.getId()).get();
     }
 
-    public int deleteById(Long id) {
+    public int delete(Long id) {
         jdbcClient.sql("DELETE FROM paciente_responsavel WHERE id_responsavel = ?").param(id).update();
         return jdbcClient.sql("DELETE FROM responsavel WHERE id = ?").param(id).update();
     }

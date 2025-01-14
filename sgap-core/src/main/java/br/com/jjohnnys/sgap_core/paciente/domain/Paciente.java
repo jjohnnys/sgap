@@ -1,6 +1,7 @@
 package br.com.jjohnnys.sgap_core.paciente.domain;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
@@ -75,7 +76,9 @@ public class Paciente {
     public Boolean isDependente() {
         return dependente;
     }
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public Set<Responsavel> getResponsaveis() {
+        if(responsaveis == null) responsaveis = new HashSet();
         return Collections.unmodifiableSet(responsaveis);
     }
 

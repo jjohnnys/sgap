@@ -22,17 +22,28 @@ public class PacienteRepositoryGateway implements PacienteDsGateway {
     private ResponsavelJDBC responsavelJDBC;
 
     @Override
-    public Paciente findById(Long id) {
+    public Optional<Paciente> findPacienteById(Long id) {
         return pacienteJDBC.findById(id);
     }
 
     @Override
-    public Paciente findByNome(String nome) {
-        Paciente paciente = pacienteJDBC.findByNome(nome);
-        if(paciente == null) return null;
-        List<Responsavel> responsaveis = responsavelJDBC.findByPacienteId(paciente.getId());
-        responsaveis.stream().forEach(paciente::adicionaResponsavel);
+    public Optional<Paciente> findPacienteByNome(String nome) {
+        Optional<Paciente> paciente = pacienteJDBC.findByNome(nome);
+        if(paciente.isEmpty()) return null;
+        List<Responsavel> responsaveis = responsavelJDBC.findByPacienteId(paciente.get().getId());
+        responsaveis.stream().forEach(paciente.get()::adicionaResponsavel);
         return paciente;
+    }
+
+    @Override
+    public Optional<Responsavel> findResponsavelById(Long id) {
+        return responsavelJDBC.findById(id);
+    }
+
+    @Override
+    public Optional<Responsavel> findResponsavelByNome(String nome) {
+        Optional<Responsavel> responsavel = responsavelJDBC.findByNome(nome);
+        return responsavel;
     }
 
     @Override
@@ -52,6 +63,17 @@ public class PacienteRepositoryGateway implements PacienteDsGateway {
         else responsavelSalvo = responsavelJDBC.update(responsavel);
         pacienteResponsavelJDBC.insert(paciente.getId(), responsavelSalvo.getId());
         return responsavelSalvo;
+    }
+
+    @Override
+    public void excluiPaciente(Long id) {
+        responsavelJDBC.delete(id);
+        pacienteJDBC.delete(id);
+    }
+
+    @Override
+    public void excluiResponsavel(Long id) {
+        responsavelJDBC.delete(id);
     }
 
     
