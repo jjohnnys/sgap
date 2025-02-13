@@ -33,8 +33,6 @@ public class CadastrarPacienteUseCaseTest {
         @Autowired
         private ResponsavelJDBC responsavelJDBC;
 
-
-
         @BeforeEach
         void setUp() {
                 responsavelJDBC.deleteAll();
