@@ -75,7 +75,10 @@ public class PacienteRepositoryGateway implements PacienteDsGateway {
     public void excluiResponsavel(Long id) {
         responsavelJDBC.delete(id);
     }
-
+    @Override
+    public int updateStatus(Long id, String status) {
+        return pacienteJDBC.updateStatus(id, status);
+    }    
     
     
 }

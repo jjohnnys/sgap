@@ -1,7 +1,6 @@
 package br.com.jjohnnys.sgap_core.paciente.domain;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
@@ -16,7 +15,9 @@ import br.com.jjohnnys.sgap_core.paciente.domain.value_object.Email;
 import br.com.jjohnnys.sgap_core.paciente.domain.value_object.Rg;
 import br.com.jjohnnys.sgap_core.paciente.domain.value_object.Telefone;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
 @AllArgsConstructor
 public class Paciente {
     private Long id;
@@ -36,46 +37,10 @@ public class Paciente {
     private Email email;
     private Set<Telefone> telefones;
     
-
-    public Long getId() {
-        return id;
-    }
-    public String getNome() {
-        return nome;
-    }
-    public CpfCnpj getCpfCnpj() {
-        return cpfCnpj;
-    }
-    public Rg getRg() {
-        return rg;
-    }
-    public FisicaJuridicaEnum getFisicaJuridica() {
-        return fisicaJuridica;
-    }
-    public LocalDate getDataNascimento() {
-        return dataNascimento;
-    }
-    public EscolaridadeEnum getEscolaridade() {
-        return escolaridade;
-    }
-    public GeneroEnum getGenero() {
-        return genero;
-    }
-    public String getProfissao() {
-        return profissao;
-    }
-    public String getEndereco() {
-        return endereco;
-    }
-    public StatusAtendimentoEnum getStatus() {
-        return status;
-    }
-    public String getObservacao() {
-        return observacao;
-    }
     public Boolean isDependente() {
         return dependente;
     }
+
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public Set<Responsavel> getResponsaveis() {
         if(responsaveis == null) responsaveis = new HashSet();
@@ -98,5 +63,29 @@ public class Paciente {
         if(responsaveis == null) responsaveis = new HashSet<>();
         responsaveis.add(responsavel);        
     }
+
+    public boolean validaMudancaStatus(StatusAtendimentoEnum novoStatus) {
+        if(novoStatus == null) return false;
+        if(StatusAtendimentoEnum.ATIVO.equals(novoStatus)) return validaNovoStatusAtivo();        
+        if(StatusAtendimentoEnum.CONCLUIDO.equals(novoStatus)) return validaNovoStatusConcluido();
+        if(StatusAtendimentoEnum.INTERROMPIDO.equals(novoStatus)) return validaNovoStatusInterrompido();
+        return true;
+    }
+
+    private boolean validaNovoStatusAtivo() {
+        if(StatusAtendimentoEnum.ATIVO.equals(this.status)) return false;
+        return true;
+    }    
+
+    private boolean validaNovoStatusConcluido() {
+        if(StatusAtendimentoEnum.CONCLUIDO.equals(this.status) || StatusAtendimentoEnum.INTERROMPIDO.equals(this.status) ) return false;
+        return true;
+    }    
+
+    private boolean validaNovoStatusInterrompido() {
+        if(StatusAtendimentoEnum.CONCLUIDO.equals(this.status) || StatusAtendimentoEnum.INTERROMPIDO.equals(this.status) ) return false;
+        return true;
+    }    
+
 
 }

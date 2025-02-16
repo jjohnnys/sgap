@@ -15,5 +15,6 @@ public interface PacienteDsGateway {
     void excluiPaciente(Long id);
     Responsavel saveResponsavel(Responsavel responsavel, Paciente paciente);
     void excluiResponsavel(Long id);
+    int updateStatus(Long id, String status);
     
 }

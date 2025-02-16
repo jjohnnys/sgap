@@ -68,11 +68,14 @@ public class PacienteJDBC {
     public int delete(Long id) {
         return jdbcClient.sql("DELETE FROM paciente  WHERE id = ?").param(id).update();
     }
-
+    
     public int deleteAll() {
         return jdbcClient.sql("DELETE FROM paciente").update();
     }
     
+    public int updateStatus(Long id, String status) {
+        return jdbcClient.sql("UPDATE paciente SET status = ? WHERE id = ?").param(status).param(id).update();
+    }
 
     
 }
