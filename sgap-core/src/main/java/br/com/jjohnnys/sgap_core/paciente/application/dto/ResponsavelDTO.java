@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import br.com.jjohnnys.sgap_core.paciente.application.enums.FisicaJuridicaEnum;
 import br.com.jjohnnys.sgap_core.paciente.domain.Responsavel;
+import br.com.jjohnnys.sgap_core.paciente.domain.enums.FisicaJuridicaEnum;
 import br.com.jjohnnys.sgap_core.paciente.domain.value_object.CpfCnpj;
 import br.com.jjohnnys.sgap_core.paciente.domain.value_object.Email;
 import br.com.jjohnnys.sgap_core.paciente.domain.value_object.Rg;

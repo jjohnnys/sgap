@@ -3,7 +3,7 @@ package br.com.jjohnnys.sgap_core.paciente.domain.value_object;
 import br.com.caelum.stella.validation.CNPJValidator;
 import br.com.caelum.stella.validation.CPFValidator;
 import br.com.caelum.stella.validation.InvalidStateException;
-import br.com.jjohnnys.sgap_core.paciente.application.enums.FisicaJuridicaEnum;
+import br.com.jjohnnys.sgap_core.paciente.domain.enums.FisicaJuridicaEnum;
 import br.com.jjohnnys.sgap_core.paciente.domain.exception.DadosPacienteException;
 import io.micrometer.common.util.StringUtils;
 import lombok.Getter;

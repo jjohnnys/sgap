@@ -3,9 +3,9 @@ package br.com.jjohnnys.sgap_core.paciente.application.usecases;
 import org.springframework.stereotype.Service;
 
 import br.com.jjohnnys.sgap_core.paciente.application.dto.AlteraStatusDto;
-import br.com.jjohnnys.sgap_core.paciente.application.enums.StatusAtendimentoEnum;
 import br.com.jjohnnys.sgap_core.paciente.application.gateways.PacienteDsGateway;
 import br.com.jjohnnys.sgap_core.paciente.domain.Paciente;
+import br.com.jjohnnys.sgap_core.paciente.domain.enums.StatusAtendimentoEnum;
 import br.com.jjohnnys.sgap_core.paciente.domain.exception.DadosPacienteException;
 
 @Service

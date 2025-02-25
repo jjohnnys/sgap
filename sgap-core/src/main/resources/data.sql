@@ -34,9 +34,23 @@ create table responsavel (
     telefones varchar (50)
 );
 
-
 create table paciente_responsavel (
     id_paciente SERIAL REFERENCES paciente(id),
     id_responsavel SERIAL REFERENCES responsavel(id),
     CONSTRAINT paciente_responsavel_pk PRIMARY KEY (id_paciente, id_responsavel)
 );
+
+create table modo_pagamento(
+    id SERIAL PRIMARY KEY,
+    id_paciente SERIAL REFERENCES paciente(id),
+    plano varchar(15),
+    valor NUMBER,
+    data date
+)
+
+create table pagamentos(
+    id SERIAL PRIMARY KEY,
+    id_paciente SERIAL REFERENCES paciente(id),
+    data date,
+    status varchar(15)
+)

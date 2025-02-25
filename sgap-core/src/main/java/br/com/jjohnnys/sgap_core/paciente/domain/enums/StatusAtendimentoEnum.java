@@ -1,4 +1,4 @@
-package br.com.jjohnnys.sgap_core.paciente.application.enums;
+package br.com.jjohnnys.sgap_core.paciente.domain.enums;
 
 import java.util.stream.Stream;
 

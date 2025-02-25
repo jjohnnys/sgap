@@ -7,8 +7,8 @@ import java.util.Set;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import br.com.jjohnnys.sgap_core.paciente.application.enums.FisicaJuridicaEnum;
 import br.com.jjohnnys.sgap_core.paciente.domain.Responsavel;
+import br.com.jjohnnys.sgap_core.paciente.domain.enums.FisicaJuridicaEnum;
 import br.com.jjohnnys.sgap_core.paciente.domain.value_object.CpfCnpj;
 import br.com.jjohnnys.sgap_core.paciente.domain.value_object.Email;
 import br.com.jjohnnys.sgap_core.paciente.domain.value_object.Rg;

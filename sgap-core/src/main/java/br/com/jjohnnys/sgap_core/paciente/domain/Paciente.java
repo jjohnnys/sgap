@@ -6,10 +6,10 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import br.com.jjohnnys.sgap_core.paciente.application.enums.EscolaridadeEnum;
-import br.com.jjohnnys.sgap_core.paciente.application.enums.FisicaJuridicaEnum;
-import br.com.jjohnnys.sgap_core.paciente.application.enums.GeneroEnum;
-import br.com.jjohnnys.sgap_core.paciente.application.enums.StatusAtendimentoEnum;
+import br.com.jjohnnys.sgap_core.paciente.domain.enums.EscolaridadeEnum;
+import br.com.jjohnnys.sgap_core.paciente.domain.enums.FisicaJuridicaEnum;
+import br.com.jjohnnys.sgap_core.paciente.domain.enums.GeneroEnum;
+import br.com.jjohnnys.sgap_core.paciente.domain.enums.StatusAtendimentoEnum;
 import br.com.jjohnnys.sgap_core.paciente.domain.value_object.CpfCnpj;
 import br.com.jjohnnys.sgap_core.paciente.domain.value_object.Email;
 import br.com.jjohnnys.sgap_core.paciente.domain.value_object.Rg;
