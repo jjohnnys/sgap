@@ -1,5 +1,7 @@
 drop table if exists paciente_responsavel;
 drop table if exists responsavel;
+drop table if exists modo_pagamento;
+drop table if exists pagamentos;
 drop table if exists paciente;
 
 create table paciente (
@@ -44,9 +46,9 @@ create table modo_pagamento(
     id SERIAL PRIMARY KEY,
     id_paciente SERIAL REFERENCES paciente(id),
     plano varchar(15),
-    valor NUMBER,
-    data date
-)
+    valor MONEY,
+    dia_do_mes INT
+);
 
 create table pagamentos(
     id SERIAL PRIMARY KEY,

@@ -1,11 +1,9 @@
-package br.com.jjohnnys.sgap_core;
+package br.com.jjohnnys.sgap_core.paciente;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
-import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -16,7 +14,6 @@ import br.com.jjohnnys.sgap_core.paciente.application.dto.PacienteDTO;
 import br.com.jjohnnys.sgap_core.paciente.application.dto.ResponsavelDTO;
 import br.com.jjohnnys.sgap_core.paciente.application.gateways.PacienteDsGateway;
 import br.com.jjohnnys.sgap_core.paciente.application.usecases.CadastrarPacienteUserCase;
-import br.com.jjohnnys.sgap_core.paciente.application.usecases.ExcluirPacienteUserCase;
 import br.com.jjohnnys.sgap_core.paciente.application.usecases.ExcluirResponsavelUserCase;
 import br.com.jjohnnys.sgap_core.paciente.domain.Paciente;
 

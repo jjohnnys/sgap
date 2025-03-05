@@ -1,4 +1,4 @@
-package br.com.jjohnnys.sgap_core.financeiro.infrastructure;
+package br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc;
 
 import java.util.Optional;
 
@@ -23,7 +23,7 @@ public class PagamentoJDBC {
     }
 
     public Pagamento insert(Pagamento pagamento) {
-        String sql = "INSERT INTO pagamentos (id, id_paciente, plano, valor, data) values (:id, :id_paciente, :plano, :valor, :data)";
+        String sql = "INSERT INTO pagamentos (id_paciente, data, status) values (:id_paciente, :data, :status)";
         jdbcClient.sql(sql)
         .param("nome", pagamento.getId())
         .param("id_paciente", pagamento.getIdPaciente())
@@ -34,7 +34,7 @@ public class PagamentoJDBC {
     }
 
     public Pagamento update(Pagamento pagamento) {
-        String sql = "UPDATE pagamentos SET , id_paciente = :id_paciente, plano = :plano, valor = :valor, data = :data WHERE id = :id";
+        String sql = "UPDATE pagamentos SET , id_paciente = :id_paciente, data = :data, status = :status WHERE id = :id";
         jdbcClient.sql(sql)
             .param("id_paciente", pagamento.getIdPaciente())
             .param("data", pagamento.getData())

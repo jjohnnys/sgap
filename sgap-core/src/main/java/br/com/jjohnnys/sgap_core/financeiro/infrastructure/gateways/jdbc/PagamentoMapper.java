@@ -1,4 +1,4 @@
-package br.com.jjohnnys.sgap_core.financeiro.infrastructure;
+package br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

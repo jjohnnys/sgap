@@ -1,4 +1,4 @@
-package br.com.jjohnnys.sgap_core;
+package br.com.jjohnnys.sgap_core.paciente;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -46,7 +46,7 @@ public class CadastrarPacienteUseCaseTest {
 
 
         @Test
-        public void criarUsuarioTest() {
+        public void criarPacienteTest() {
                 PacienteDTO pacienteDTO = new PacienteDTO(null, "Dom Pedro II", "043.153.290-70", "11.111.111-1", 'F', LocalDate.of(1825, 12, 02), "Doutorado", "Masculino", "Imperador", "Rua do Imperador", "Ativo", "CDF", false, null, "imperador@brasil.com.br", Set.of("21111111111","11111111111"));
                 cadastrarPacienteUserCase.execute(pacienteDTO);
                 Optional<Paciente> pacienteSalvo = pacienteDsGateway.findPacienteByNome("Dom Pedro II");
@@ -54,7 +54,7 @@ public class CadastrarPacienteUseCaseTest {
         }
 
         @Test
-        public void criarUsuarioDependentTest() {
+        public void criarPacienteDependentTest() {
                 ResponsavelDTO responsavelDTO = new ResponsavelDTO(null, "Dom Pedro II", "043.153.290-70", "11.111.111-1", 'F', LocalDate.of(1825, 12, 02), "Imperador", "Rua do Imperador", "Imperador", "imperador@brasil.com.br", Set.of("21111111111","11111111111"));        
                 PacienteDTO pacienteDTO = new PacienteDTO(null, "Princesa Isabel", "632.516.100-90", "11.111.111-2", 'F', LocalDate.of(1846, 07, 29), "Doutorado", "Feminino", "Princesa", "Rua da Princesa", "Ativo", "CDF", true, Set.of(responsavelDTO), "princesa@brasil.com.br", Set.of("2111111111","11111111112"));
                 cadastrarPacienteUserCase.execute(pacienteDTO);
@@ -64,13 +64,13 @@ public class CadastrarPacienteUseCaseTest {
         }
 
         @Test
-        public void retorneErroAoCriarUsuarioDependentSemResponsavelTest() {
+        public void retorneErroAoCriarPacienteDependentSemResponsavelTest() {
                 PacienteDTO pacienteDTO = new PacienteDTO(null, "Princesa Isabel", "632.516.100-90", "11.111.111-2", 'F', LocalDate.of(1846, 07, 29), "Doutorado", "Feminino", "Princesa", "Rua da Princesa", "Ativo", "CDF", true, null, "princesa@brasil.com.br", Set.of("21111111111","1111111111"));                
                 assertThrows(DadosPacienteException.class, () -> cadastrarPacienteUserCase.execute(pacienteDTO));
         }
 
         @Test
-        public void retorneErroAoCriarUsuarioNaoDependenteComOResponsavelTest() {
+        public void retorneErroAoCriarPacienteNaoDependenteComOResponsavelTest() {
                 ResponsavelDTO responsavelDTO = new ResponsavelDTO(null, "Dom Pedro II", "043.153.290-70", "11.111.111-1", 'F', LocalDate.of(1825, 12, 02), "Imperador", "Rua do Imperador", "Imperador", "imperador@brasil.com.br", Set.of("21111111111, 11111111111"));        
                 PacienteDTO pacienteDTO = new PacienteDTO(null, "Princesa Isabel", "632.516.100-90", "11.111.111-2", 'F', LocalDate.of(1846, 07, 29), "Doutorado", "Feminino", "Princesa", "Rua da Princesa", "Ativo", "CDF", false, Set.of(responsavelDTO), "princesa@brasil.com.br", Set.of("2111111111, 11111111111"));                
                 assertThrows(DadosPacienteException.class, () -> cadastrarPacienteUserCase.execute(pacienteDTO));

@@ -41,9 +41,8 @@ public class Paciente {
         return dependente;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public Set<Responsavel> getResponsaveis() {
-        if(responsaveis == null) responsaveis = new HashSet();
+        if(responsaveis == null) return null;
         return Collections.unmodifiableSet(responsaveis);
     }
 

@@ -1,14 +1,12 @@
-package br.com.jjohnnys.sgap_core.financeiro.infrastructure;
+package br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 
 import org.springframework.jdbc.core.RowMapper;
 
 import br.com.jjohnnys.sgap_core.financeiro.domain.ModoPagamento;
 import br.com.jjohnnys.sgap_core.financeiro.domain.enums.PlanoEnum;
-import br.com.jjohnnys.sgap_core.financeiro.domain.value_object.Valor;
 
 public class ModoPagamentoMapper implements RowMapper<ModoPagamento> {
 
@@ -16,10 +14,10 @@ public class ModoPagamentoMapper implements RowMapper<ModoPagamento> {
     public ModoPagamento mapRow(ResultSet rs, int arg1) throws SQLException {
         ModoPagamento modoPagamento = new ModoPagamento(
             rs.getLong("id"),
-            rs.getLong("idPaciente"),
+            rs.getLong("id_paciente"),
             PlanoEnum.valueOf(rs.getString("plano")),
-            new Valor(rs.getFloat("valor")),
-            LocalDate.parse(rs.getString("data_nascimento")));
+            rs.getBigDecimal("valor"),
+            rs.getInt("dia_do_mes"));
         return modoPagamento;   
         
     }    
