@@ -1,5 +1,6 @@
 package br.com.jjohnnys.sgap_core.financeiro;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import br.com.jjohnnys.sgap_core.financeiro.application.dtos.ModoPagamentoDTO;
 import br.com.jjohnnys.sgap_core.financeiro.application.gateways.FinanceiroDsGateways;
+import br.com.jjohnnys.sgap_core.financeiro.application.usecases.AlterarModoPagamentoUseCase;
 import br.com.jjohnnys.sgap_core.financeiro.application.usecases.CadastrarModoPagamentoUseCase;
 import br.com.jjohnnys.sgap_core.financeiro.domain.ModoPagamento;
 import br.com.jjohnnys.sgap_core.financeiro.domain.enums.PlanoEnum;
@@ -28,10 +30,12 @@ import br.com.jjohnnys.sgap_core.paciente.domain.enums.StatusAtendimentoEnum;
 import br.com.jjohnnys.sgap_core.paciente.infrastructure.gateways.jdbc.PacienteJDBC;
 
 @SpringBootTest
-public class CadastrarModoPagamentoUseCaseTest {
+public class AlterarModoPagamentoUseCaseTest {
 
     @Autowired
     private CadastrarPacienteUserCase cadastrarPacienteUserCase;
+    @Autowired
+    private AlterarModoPagamentoUseCase alterarModoPagamentoUseCase;
     @Autowired
     private CadastrarModoPagamentoUseCase cadastrarModoPagamentoUseCase;
     @Autowired
@@ -49,37 +53,30 @@ public class CadastrarModoPagamentoUseCaseTest {
         pacienteJDBC.deleteAll();
     }
 
-
     @Test
-    public void cadastrarModoPagamento() {
+    public void alterarModoPagamento() {
+        ModoPagamento modoPagamento = cadastrarModoPagamentoSemanal();    
+        Paciente paciente = pacienteDsGateway.findPacienteByNome("Dom Pedro II").get();
+        ModoPagamentoDTO modoPagamentoDTO = new ModoPagamentoDTO(modoPagamento.getId(), modoPagamento.getIdPaciente(), PlanoEnum.QUINZENAL.name(), modoPagamento.getValor(), modoPagamento.getDiaDoMes());
+        alterarModoPagamentoUseCase.execute(modoPagamentoDTO);
+        ModoPagamento modoPagamentoSalvo = financeiroDsGateways.findModoPagamentoPorIdPaciente(paciente.getId());
+        assertEquals(PlanoEnum.QUINZENAL, modoPagamentoSalvo.getPlano());
+    }
+
+    @Test    
+    public void deveRetornarErroAoAlterarModopagamentoComCLienteDeIdDiferente() {
+        ModoPagamento modoPagamento = cadastrarModoPagamentoSemanal();
+        ModoPagamentoDTO modoPagamentoDTO = new ModoPagamentoDTO(5000L, modoPagamento.getIdPaciente(), PlanoEnum.QUINZENAL.name(), new BigDecimal(130), 10);
+        assertThrows(DadosFinanceiroException.class, () -> alterarModoPagamentoUseCase.execute(modoPagamentoDTO));
+    }
+
+    
+    private ModoPagamento cadastrarModoPagamentoSemanal() {
         Paciente paciente = criaPaciente(StatusAtendimentoEnum.ATIVO);
         ModoPagamentoDTO modoPagamentoDTO = new ModoPagamentoDTO(null, paciente.getId(), PlanoEnum.SEMANAL.name(), new BigDecimal(130), 10);
         cadastrarModoPagamentoUseCase.execute(modoPagamentoDTO);
         ModoPagamento modoPagamentoSalvo = financeiroDsGateways.findModoPagamentoPorIdPaciente(paciente.getId());
-        assertTrue(modoPagamentoSalvo.getValor().compareTo(new BigDecimal(130)) == 0);
-    }
-
-    @Test    
-    public void cadastrarModopagamentoVoluntario() {
-        Paciente paciente = criaPaciente(StatusAtendimentoEnum.ATIVO);
-        ModoPagamentoDTO modoPagamentoDTO = new ModoPagamentoDTO(null, paciente.getId(), PlanoEnum.VOLUNTARIO.name(), new BigDecimal(0), 10);        
-        cadastrarModoPagamentoUseCase.execute(modoPagamentoDTO);
-        ModoPagamento modoPagamentoSalvo = financeiroDsGateways.findModoPagamentoPorIdPaciente(paciente.getId());
-        assertTrue(modoPagamentoSalvo.getValor().compareTo(new BigDecimal(0)) == 0);              
-    }
-
-    @Test    
-    public void deveRetornarErroAoCadastrarModopagamentoVoluntarioComValor() {
-        Paciente paciente = criaPaciente(StatusAtendimentoEnum.ATIVO);
-        ModoPagamentoDTO modoPagamentoDTO = new ModoPagamentoDTO(null, paciente.getId(), PlanoEnum.VOLUNTARIO.name(), new BigDecimal(130), 10);        
-        assertThrows(DadosFinanceiroException.class, () -> cadastrarModoPagamentoUseCase.execute(modoPagamentoDTO));
-    }
-
-    @Test    
-    public void deveRetornarErroAoCadastrarModopagamentoSemValor() {
-        Paciente paciente = criaPaciente(StatusAtendimentoEnum.ATIVO);
-        ModoPagamentoDTO modoPagamentoDTO = new ModoPagamentoDTO(null, paciente.getId(), PlanoEnum.QUINZENAL.name(), new BigDecimal(0), 10);        
-        assertThrows(DadosFinanceiroException.class, () -> cadastrarModoPagamentoUseCase.execute(modoPagamentoDTO));
+        return modoPagamentoSalvo;
     }
     
 

@@ -1,5 +1,7 @@
 package br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
 import br.com.jjohnnys.sgap_core.financeiro.application.gateways.FinanceiroDsGateways;
@@ -15,12 +17,15 @@ public class FinanceiroRepositoryGateway implements FinanceiroDsGateways {
 
     @Override
     public ModoPagamento saveModoPagamento(ModoPagamento modoPagamento) {
-        return modoPagamentoJDBC.insert(modoPagamento);
+        if(modoPagamento.getId() == null)
+            return modoPagamentoJDBC.insert(modoPagamento);
+        else 
+            return modoPagamentoJDBC.update(modoPagamento);
     }
 
     @Override
     public ModoPagamento findModoPagamentoPorIdPaciente(Long idPaciente) {
-        return modoPagamentoJDBC.findByIdPaciente(idPaciente).get();
+        return modoPagamentoJDBC.findByIdPaciente(idPaciente);
     }
 
 
