@@ -25,7 +25,7 @@ public class ModoPagamentoJDBC {
         jdbcClient.sql(sql)
         .param("id_paciente", modoPagamento.getIdPaciente())
         .param("plano", modoPagamento.getPlano().name())
-        .param("valor", modoPagamento.getValor())
+        .param("valor", modoPagamento.getValorPorConsulta())
         .param("dia_do_mes", modoPagamento.getDiaDoMes()).update();
         Long idCriado = jdbcClient.sql("SELECT lastval()").query(Long.class).single();
         return findById(idCriado);
@@ -36,7 +36,7 @@ public class ModoPagamentoJDBC {
         jdbcClient.sql(sql)
             .param("id_paciente", modoPagamento.getIdPaciente())
             .param("plano", modoPagamento.getPlano().name())
-            .param("valor", modoPagamento.getValor())
+            .param("valor", modoPagamento.getValorPorConsulta())
             .param("dia_do_mes", modoPagamento.getDiaDoMes())
             .param("id", modoPagamento.getId()).update();
         return findById(modoPagamento.getId());

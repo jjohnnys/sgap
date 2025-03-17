@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import br.com.jjohnnys.sgap_core.financeiro.application.dtos.ModoPagamentoDTO;
 import br.com.jjohnnys.sgap_core.financeiro.application.gateways.FinanceiroDsGateways;
-import br.com.jjohnnys.sgap_core.financeiro.application.usecases.AlterarModoPagamentoUseCase;
+import br.com.jjohnnys.sgap_core.financeiro.application.usecases.ExcluirModoPagamentoUseCase;
 import br.com.jjohnnys.sgap_core.financeiro.application.usecases.CadastrarModoPagamentoUseCase;
 import br.com.jjohnnys.sgap_core.financeiro.domain.ModoPagamento;
 import br.com.jjohnnys.sgap_core.financeiro.domain.enums.PlanoEnum;
@@ -35,7 +35,7 @@ public class AlterarModoPagamentoUseCaseTest {
     @Autowired
     private CadastrarPacienteUserCase cadastrarPacienteUserCase;
     @Autowired
-    private AlterarModoPagamentoUseCase alterarModoPagamentoUseCase;
+    private ExcluirModoPagamentoUseCase alterarModoPagamentoUseCase;
     @Autowired
     private CadastrarModoPagamentoUseCase cadastrarModoPagamentoUseCase;
     @Autowired
@@ -57,7 +57,7 @@ public class AlterarModoPagamentoUseCaseTest {
     public void alterarModoPagamento() {
         ModoPagamento modoPagamento = cadastrarModoPagamentoSemanal();    
         Paciente paciente = pacienteDsGateway.findPacienteByNome("Dom Pedro II").get();
-        ModoPagamentoDTO modoPagamentoDTO = new ModoPagamentoDTO(modoPagamento.getId(), modoPagamento.getIdPaciente(), PlanoEnum.QUINZENAL.name(), modoPagamento.getValor(), modoPagamento.getDiaDoMes());
+        ModoPagamentoDTO modoPagamentoDTO = new ModoPagamentoDTO(modoPagamento.getId(), modoPagamento.getIdPaciente(), PlanoEnum.QUINZENAL.name(), modoPagamento.getValorPorConsulta(), modoPagamento.getDiaDoMes());
         alterarModoPagamentoUseCase.execute(modoPagamentoDTO);
         ModoPagamento modoPagamentoSalvo = financeiroDsGateways.findModoPagamentoPorIdPaciente(paciente.getId());
         assertEquals(PlanoEnum.QUINZENAL, modoPagamentoSalvo.getPlano());

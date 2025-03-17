@@ -54,5 +54,6 @@ create table pagamentos(
     id SERIAL PRIMARY KEY,
     id_paciente SERIAL REFERENCES paciente(id),
     data date,
+    valor MONEY,
     status varchar(15)
 )

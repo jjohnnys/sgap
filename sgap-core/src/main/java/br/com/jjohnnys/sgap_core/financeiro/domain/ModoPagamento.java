@@ -13,7 +13,7 @@ public class ModoPagamento {
     private Long id;
     private Long idPaciente;
     private PlanoEnum plano;
-    private BigDecimal valor;
+    private BigDecimal valorPorConsulta;
     private Integer diaDoMes;
 
     public void validaCamposNulos() {        
@@ -22,12 +22,16 @@ public class ModoPagamento {
     }
 
     public void validaValor() {
-        if(this.valor.compareTo(new BigDecimal(0)) == -1)
+        if(this.valorPorConsulta.compareTo(new BigDecimal(0)) == -1)
             throw new DadosFinanceiroException("O valor não pode ser negativo");
-        if(PlanoEnum.VOLUNTARIO.equals(this.plano) && !(this.valor.compareTo(new BigDecimal(0)) == 0))
+        if(PlanoEnum.VOLUNTARIO.equals(this.plano) && !(this.valorPorConsulta.compareTo(new BigDecimal(0)) == 0))
                 throw new DadosFinanceiroException("Pacientes com planos do tipo Voluntários não pode ter valor");
-        if(this.valor.compareTo(new BigDecimal(0)) == 0 && !PlanoEnum.VOLUNTARIO.equals(this.plano))
+        if(this.valorPorConsulta.compareTo(new BigDecimal(0)) == 0 && !PlanoEnum.VOLUNTARIO.equals(this.plano))
             throw new DadosFinanceiroException("Informe o valor para o plano do paciente");
+    }
+
+    public BigDecimal getValorAPagarNoMes() {
+        return this.valorPorConsulta.multiply(new BigDecimal(plano.getQuantidadePorSemana()));
     }
      
 }

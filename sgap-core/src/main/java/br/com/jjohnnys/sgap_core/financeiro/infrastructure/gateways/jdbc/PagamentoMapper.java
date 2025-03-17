@@ -15,8 +15,9 @@ public class PagamentoMapper implements RowMapper<Pagamento> {
     public Pagamento mapRow(ResultSet rs, int arg1) throws SQLException {
         Pagamento modoPagamento = new Pagamento(
             rs.getLong("id"),
-            rs.getLong("idPaciente"),
+            rs.getLong("id_paciente"),
             LocalDate.parse(rs.getString("data")),
+            rs.getBigDecimal("valor"),
             StatusPagamentoEnum.valueOf(rs.getString("status")));
         return modoPagamento;   
         

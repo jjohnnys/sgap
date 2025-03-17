@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AlterarModoPagamentoUseCase {
+public class ExcluirModoPagamentoUseCase {
 
     private final FinanceiroDsGateways financeiroDsGateways;
 
