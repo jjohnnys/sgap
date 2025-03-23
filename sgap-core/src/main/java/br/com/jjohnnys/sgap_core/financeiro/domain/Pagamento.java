@@ -12,7 +12,7 @@ import lombok.Getter;
 public class Pagamento {
 
     private Long id;
-    private Long idPaciente;
+    private PlanoAtendimento planoAtendimento;
     private LocalDate data;
     private BigDecimal valor;
     private StatusPagamentoEnum status;

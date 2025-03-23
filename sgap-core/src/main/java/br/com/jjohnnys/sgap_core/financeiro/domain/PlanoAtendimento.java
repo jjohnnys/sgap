@@ -4,20 +4,21 @@ import java.math.BigDecimal;
 
 import br.com.jjohnnys.sgap_core.financeiro.domain.enums.PlanoEnum;
 import br.com.jjohnnys.sgap_core.financeiro.domain.exception.DadosFinanceiroException;
+import br.com.jjohnnys.sgap_core.paciente.domain.Paciente;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ModoPagamento {
+public class PlanoAtendimento {
     private Long id;
-    private Long idPaciente;
+    private Paciente paciente;
     private PlanoEnum plano;
     private BigDecimal valorPorConsulta;
-    private Integer diaDoMes;
+    private Integer diaPagamento;
 
     public void validaCamposNulos() {        
-        if(this.idPaciente == null || this.plano == null || this.diaDoMes == null)
+        if(this.paciente.getId() == null || this.plano == null || this.diaPagamento == null)
             throw new DadosFinanceiroException("Para modo de pagamento todos os campos Pacientem plano, data: Devem ser preenchidos");
     }
 

@@ -1,32 +1,34 @@
 package br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import br.com.jjohnnys.sgap_core.financeiro.application.gateways.FinanceiroDsGateways;
-import br.com.jjohnnys.sgap_core.financeiro.domain.ModoPagamento;
 import br.com.jjohnnys.sgap_core.financeiro.domain.Pagamento;
-import br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc.ModoPagamentoJDBC;
+import br.com.jjohnnys.sgap_core.financeiro.domain.PlanoAtendimento;
 import br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc.PagamentoJDBC;
+import br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc.PlanoAtendimentoJDBC;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class FinanceiroRepositoryGateway implements FinanceiroDsGateways {
 
-    private final ModoPagamentoJDBC modoPagamentoJDBC;
+    private final PlanoAtendimentoJDBC planoAtendimentoJDBC;
     private final PagamentoJDBC pagamentoJDBC;
 
     @Override
-    public ModoPagamento saveModoPagamento(ModoPagamento modoPagamento) {
-        if(modoPagamento.getId() == null)
-            return modoPagamentoJDBC.insert(modoPagamento);
+    public PlanoAtendimento savePlanoAtendimento(PlanoAtendimento planoAtendimento) {
+        if(planoAtendimento.getId() == null)
+            return planoAtendimentoJDBC.insert(planoAtendimento);
         else 
-            return modoPagamentoJDBC.update(modoPagamento);
+            return planoAtendimentoJDBC.update(planoAtendimento);
     }
 
     @Override
-    public ModoPagamento findModoPagamentoPorIdPaciente(Long idPaciente) {
-        return modoPagamentoJDBC.findByIdPaciente(idPaciente);
+    public PlanoAtendimento findPlanoAtendimentoPorIdPaciente(Long idPaciente) {
+        return planoAtendimentoJDBC.findByIdPaciente(idPaciente);
     }
 
     @Override
@@ -38,12 +40,12 @@ public class FinanceiroRepositoryGateway implements FinanceiroDsGateways {
     }
 
     @Override
-    public Pagamento findById(Long id) {
+    public Pagamento findPagamentoById(Long id) {
         return pagamentoJDBC.findById(id);
     }
 
     @Override
-    public Pagamento findByIdPaciente(Long idPaciente) {
+    public List<Pagamento> findByIdPaciente(Long idPaciente) {
         return pagamentoJDBC.findByIdPaciente(idPaciente);
     }
 

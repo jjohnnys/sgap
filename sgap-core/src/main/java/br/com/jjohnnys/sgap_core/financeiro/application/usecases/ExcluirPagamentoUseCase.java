@@ -15,10 +15,10 @@ public class ExcluirPagamentoUseCase {
     private PacienteDsGateway pacienteDsGateway;
     private FinanceiroDsGateways financeiroDsGateways;
 
-    public void execute(PagamentoDTO pagamentoDTO) {
-        Paciente paciente = pacienteDsGateway.findPacienteById(pagamentoDTO.idPaciente()).get();
+    public void execute(Long idPagamento) {
+        Pagamento pagamento = financeiroDsGateways.findPagamentoById(idPagamento);
+        Paciente paciente = pacienteDsGateway.findPacienteById(pagamento.getPlanoAtendimento().getPaciente().getId()).get();
         if(paciente == null) throw new DadosFinanceiroException("Paciente invalido para pagamento");
-        Pagamento pagamento = pagamentoDTO.criarPagamento();        
         financeiroDsGateways.deletePagamento(pagamento.getId());
     }
     

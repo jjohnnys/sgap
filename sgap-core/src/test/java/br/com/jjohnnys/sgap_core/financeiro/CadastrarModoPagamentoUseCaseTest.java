@@ -13,13 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import br.com.jjohnnys.sgap_core.financeiro.application.dtos.ModoPagamentoDTO;
+import br.com.jjohnnys.sgap_core.financeiro.application.dtos.PlanoAtendimentoDTO;
 import br.com.jjohnnys.sgap_core.financeiro.application.gateways.FinanceiroDsGateways;
-import br.com.jjohnnys.sgap_core.financeiro.application.usecases.CadastrarModoPagamentoUseCase;
-import br.com.jjohnnys.sgap_core.financeiro.domain.ModoPagamento;
+import br.com.jjohnnys.sgap_core.financeiro.application.usecases.CadastroPlanoAtendimentoUseCase;
+import br.com.jjohnnys.sgap_core.financeiro.domain.PlanoAtendimento;
 import br.com.jjohnnys.sgap_core.financeiro.domain.enums.PlanoEnum;
 import br.com.jjohnnys.sgap_core.financeiro.domain.exception.DadosFinanceiroException;
-import br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc.ModoPagamentoJDBC;
+import br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc.PlanoAtendimentoJDBC;
 import br.com.jjohnnys.sgap_core.paciente.application.dto.PacienteDTO;
 import br.com.jjohnnys.sgap_core.paciente.application.gateways.PacienteDsGateway;
 import br.com.jjohnnys.sgap_core.paciente.application.usecases.CadastrarPacienteUserCase;
@@ -33,7 +33,7 @@ public class CadastrarModoPagamentoUseCaseTest {
     @Autowired
     private CadastrarPacienteUserCase cadastrarPacienteUserCase;
     @Autowired
-    private CadastrarModoPagamentoUseCase cadastrarModoPagamentoUseCase;
+    private CadastroPlanoAtendimentoUseCase cadastrarModoPagamentoUseCase;
     @Autowired
     private PacienteDsGateway pacienteDsGateway;
     @Autowired
@@ -41,7 +41,7 @@ public class CadastrarModoPagamentoUseCaseTest {
     @Autowired
     private PacienteJDBC pacienteJDBC;
     @Autowired
-    private ModoPagamentoJDBC modoPagamentoJDBC;
+    private PlanoAtendimentoJDBC modoPagamentoJDBC;
 
     @BeforeEach
     void setUp() {
@@ -53,32 +53,32 @@ public class CadastrarModoPagamentoUseCaseTest {
     @Test
     public void cadastrarModoPagamento() {
         Paciente paciente = criaPaciente(StatusAtendimentoEnum.ATIVO);
-        ModoPagamentoDTO modoPagamentoDTO = new ModoPagamentoDTO(null, paciente.getId(), PlanoEnum.SEMANAL.name(), new BigDecimal(130), 10);
+        PlanoAtendimentoDTO modoPagamentoDTO = new PlanoAtendimentoDTO(null, paciente.getId(), PlanoEnum.SEMANAL.name(), new BigDecimal(130), 10);
         cadastrarModoPagamentoUseCase.execute(modoPagamentoDTO);
-        ModoPagamento modoPagamentoSalvo = financeiroDsGateways.findModoPagamentoPorIdPaciente(paciente.getId());
+        PlanoAtendimento modoPagamentoSalvo = financeiroDsGateways.findPlanoAtendimentoPorIdPaciente(paciente.getId());
         assertTrue(modoPagamentoSalvo.getValorPorConsulta().compareTo(new BigDecimal(130)) == 0);
     }
 
     @Test    
     public void cadastrarModopagamentoVoluntario() {
         Paciente paciente = criaPaciente(StatusAtendimentoEnum.ATIVO);
-        ModoPagamentoDTO modoPagamentoDTO = new ModoPagamentoDTO(null, paciente.getId(), PlanoEnum.VOLUNTARIO.name(), new BigDecimal(0), 10);        
+        PlanoAtendimentoDTO modoPagamentoDTO = new PlanoAtendimentoDTO(null, paciente.getId(), PlanoEnum.VOLUNTARIO.name(), new BigDecimal(0), 10);        
         cadastrarModoPagamentoUseCase.execute(modoPagamentoDTO);
-        ModoPagamento modoPagamentoSalvo = financeiroDsGateways.findModoPagamentoPorIdPaciente(paciente.getId());
+        PlanoAtendimento modoPagamentoSalvo = financeiroDsGateways.findPlanoAtendimentoPorIdPaciente(paciente.getId());
         assertTrue(modoPagamentoSalvo.getValorPorConsulta().compareTo(new BigDecimal(0)) == 0);              
     }
 
     @Test    
     public void deveRetornarErroAoCadastrarModopagamentoVoluntarioComValor() {
         Paciente paciente = criaPaciente(StatusAtendimentoEnum.ATIVO);
-        ModoPagamentoDTO modoPagamentoDTO = new ModoPagamentoDTO(null, paciente.getId(), PlanoEnum.VOLUNTARIO.name(), new BigDecimal(130), 10);        
+        PlanoAtendimentoDTO modoPagamentoDTO = new PlanoAtendimentoDTO(null, paciente.getId(), PlanoEnum.VOLUNTARIO.name(), new BigDecimal(130), 10);        
         assertThrows(DadosFinanceiroException.class, () -> cadastrarModoPagamentoUseCase.execute(modoPagamentoDTO));
     }
 
     @Test    
     public void deveRetornarErroAoCadastrarModopagamentoSemValor() {
         Paciente paciente = criaPaciente(StatusAtendimentoEnum.ATIVO);
-        ModoPagamentoDTO modoPagamentoDTO = new ModoPagamentoDTO(null, paciente.getId(), PlanoEnum.QUINZENAL.name(), new BigDecimal(0), 10);        
+        PlanoAtendimentoDTO modoPagamentoDTO = new PlanoAtendimentoDTO(null, paciente.getId(), PlanoEnum.QUINZENAL.name(), new BigDecimal(0), 10);        
         assertThrows(DadosFinanceiroException.class, () -> cadastrarModoPagamentoUseCase.execute(modoPagamentoDTO));
     }
     

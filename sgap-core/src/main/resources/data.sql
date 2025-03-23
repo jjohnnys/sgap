@@ -1,7 +1,7 @@
 drop table if exists paciente_responsavel;
 drop table if exists responsavel;
-drop table if exists modo_pagamento;
 drop table if exists pagamentos;
+drop table if exists plano_atendimento;
 drop table if exists paciente;
 
 create table paciente (
@@ -42,17 +42,17 @@ create table paciente_responsavel (
     CONSTRAINT paciente_responsavel_pk PRIMARY KEY (id_paciente, id_responsavel)
 );
 
-create table modo_pagamento(
+create table plano_atendimento(
     id SERIAL PRIMARY KEY,
     id_paciente SERIAL REFERENCES paciente(id),
     plano varchar(15),
     valor MONEY,
-    dia_do_mes INT
+    dia_pagamento INT
 );
 
 create table pagamentos(
     id SERIAL PRIMARY KEY,
-    id_paciente SERIAL REFERENCES paciente(id),
+    id_plano_atendimento SERIAL REFERENCES plano_atendimento(id),
     data date,
     valor MONEY,
     status varchar(15)

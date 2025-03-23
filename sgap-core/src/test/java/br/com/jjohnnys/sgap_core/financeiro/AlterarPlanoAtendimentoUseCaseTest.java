@@ -2,7 +2,6 @@ package br.com.jjohnnys.sgap_core.financeiro;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,14 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import br.com.jjohnnys.sgap_core.financeiro.application.dtos.ModoPagamentoDTO;
+import br.com.jjohnnys.sgap_core.financeiro.application.dtos.PlanoAtendimentoDTO;
 import br.com.jjohnnys.sgap_core.financeiro.application.gateways.FinanceiroDsGateways;
-import br.com.jjohnnys.sgap_core.financeiro.application.usecases.ExcluirModoPagamentoUseCase;
-import br.com.jjohnnys.sgap_core.financeiro.application.usecases.CadastrarModoPagamentoUseCase;
-import br.com.jjohnnys.sgap_core.financeiro.domain.ModoPagamento;
+import br.com.jjohnnys.sgap_core.financeiro.application.usecases.CadastroPlanoAtendimentoUseCase;
+import br.com.jjohnnys.sgap_core.financeiro.domain.PlanoAtendimento;
 import br.com.jjohnnys.sgap_core.financeiro.domain.enums.PlanoEnum;
 import br.com.jjohnnys.sgap_core.financeiro.domain.exception.DadosFinanceiroException;
-import br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc.ModoPagamentoJDBC;
+import br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc.PlanoAtendimentoJDBC;
 import br.com.jjohnnys.sgap_core.paciente.application.dto.PacienteDTO;
 import br.com.jjohnnys.sgap_core.paciente.application.gateways.PacienteDsGateway;
 import br.com.jjohnnys.sgap_core.paciente.application.usecases.CadastrarPacienteUserCase;
@@ -30,14 +28,14 @@ import br.com.jjohnnys.sgap_core.paciente.domain.enums.StatusAtendimentoEnum;
 import br.com.jjohnnys.sgap_core.paciente.infrastructure.gateways.jdbc.PacienteJDBC;
 
 @SpringBootTest
-public class AlterarModoPagamentoUseCaseTest {
+public class AlterarPlanoAtendimentoUseCaseTest {
 
     @Autowired
     private CadastrarPacienteUserCase cadastrarPacienteUserCase;
     @Autowired
-    private ExcluirModoPagamentoUseCase alterarModoPagamentoUseCase;
+    private CadastroPlanoAtendimentoUseCase alterarplanoAtendimentoUseCase;
     @Autowired
-    private CadastrarModoPagamentoUseCase cadastrarModoPagamentoUseCase;
+    private CadastroPlanoAtendimentoUseCase cadastrarplanoAtendimentoUseCase;
     @Autowired
     private PacienteDsGateway pacienteDsGateway;
     @Autowired
@@ -45,38 +43,38 @@ public class AlterarModoPagamentoUseCaseTest {
     @Autowired
     private PacienteJDBC pacienteJDBC;
     @Autowired
-    private ModoPagamentoJDBC modoPagamentoJDBC;
+    private PlanoAtendimentoJDBC planoAtendimentoJDBC;
 
     @BeforeEach
     void setUp() {
-        modoPagamentoJDBC.deleteAll();    
+        planoAtendimentoJDBC.deleteAll();    
         pacienteJDBC.deleteAll();
     }
 
     @Test
-    public void alterarModoPagamento() {
-        ModoPagamento modoPagamento = cadastrarModoPagamentoSemanal();    
+    public void alterarplanoAtendimento() {
+        PlanoAtendimento planoAtendimento = cadastrarplanoAtendimentoSemanal();    
         Paciente paciente = pacienteDsGateway.findPacienteByNome("Dom Pedro II").get();
-        ModoPagamentoDTO modoPagamentoDTO = new ModoPagamentoDTO(modoPagamento.getId(), modoPagamento.getIdPaciente(), PlanoEnum.QUINZENAL.name(), modoPagamento.getValorPorConsulta(), modoPagamento.getDiaDoMes());
-        alterarModoPagamentoUseCase.execute(modoPagamentoDTO);
-        ModoPagamento modoPagamentoSalvo = financeiroDsGateways.findModoPagamentoPorIdPaciente(paciente.getId());
-        assertEquals(PlanoEnum.QUINZENAL, modoPagamentoSalvo.getPlano());
+        PlanoAtendimentoDTO planoAtendimentoDTO = new PlanoAtendimentoDTO(planoAtendimento.getId(), planoAtendimento.getPaciente().getId(), PlanoEnum.QUINZENAL.name(), planoAtendimento.getValorPorConsulta(), planoAtendimento.getDiaPagamento());
+        alterarplanoAtendimentoUseCase.execute(planoAtendimentoDTO);
+        PlanoAtendimento planoAtendimentoSalvo = financeiroDsGateways.findPlanoAtendimentoPorIdPaciente(paciente.getId());
+        assertEquals(PlanoEnum.QUINZENAL, planoAtendimentoSalvo.getPlano());
     }
 
     @Test    
-    public void deveRetornarErroAoAlterarModopagamentoComCLienteDeIdDiferente() {
-        ModoPagamento modoPagamento = cadastrarModoPagamentoSemanal();
-        ModoPagamentoDTO modoPagamentoDTO = new ModoPagamentoDTO(5000L, modoPagamento.getIdPaciente(), PlanoEnum.QUINZENAL.name(), new BigDecimal(130), 10);
-        assertThrows(DadosFinanceiroException.class, () -> alterarModoPagamentoUseCase.execute(modoPagamentoDTO));
+    public void deveRetornarErroAoAlterarplanoAtendimentoComCLienteDeIdDiferente() {
+        PlanoAtendimento planoAtendimento = cadastrarplanoAtendimentoSemanal();
+        PlanoAtendimentoDTO planoAtendimentoDTO = new PlanoAtendimentoDTO(5000L, planoAtendimento.getPaciente().getId(), PlanoEnum.QUINZENAL.name(), new BigDecimal(130), 10);
+        assertThrows(DadosFinanceiroException.class, () -> alterarplanoAtendimentoUseCase.execute(planoAtendimentoDTO));
     }
 
     
-    private ModoPagamento cadastrarModoPagamentoSemanal() {
+    private PlanoAtendimento cadastrarplanoAtendimentoSemanal() {
         Paciente paciente = criaPaciente(StatusAtendimentoEnum.ATIVO);
-        ModoPagamentoDTO modoPagamentoDTO = new ModoPagamentoDTO(null, paciente.getId(), PlanoEnum.SEMANAL.name(), new BigDecimal(130), 10);
-        cadastrarModoPagamentoUseCase.execute(modoPagamentoDTO);
-        ModoPagamento modoPagamentoSalvo = financeiroDsGateways.findModoPagamentoPorIdPaciente(paciente.getId());
-        return modoPagamentoSalvo;
+        PlanoAtendimentoDTO planoAtendimentoDTO = new PlanoAtendimentoDTO(null, paciente.getId(), PlanoEnum.SEMANAL.name(), new BigDecimal(130), 10);
+        cadastrarplanoAtendimentoUseCase.execute(planoAtendimentoDTO);
+        PlanoAtendimento planoAtendimentoSalvo = financeiroDsGateways.findPlanoAtendimentoPorIdPaciente(paciente.getId());
+        return planoAtendimentoSalvo;
     }
     
 

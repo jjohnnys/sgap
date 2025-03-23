@@ -5,19 +5,21 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import br.com.jjohnnys.sgap_core.financeiro.domain.ModoPagamento;
+import br.com.jjohnnys.sgap_core.financeiro.domain.PlanoAtendimento;
 import br.com.jjohnnys.sgap_core.financeiro.domain.enums.PlanoEnum;
 
-public class ModoPagamentoMapper implements RowMapper<ModoPagamento> {
+public class PlanoAtendimentoMapper implements RowMapper<PlanoAtendimento> {
+
+
 
     @Override
-    public ModoPagamento mapRow(ResultSet rs, int arg1) throws SQLException {
-        ModoPagamento modoPagamento = new ModoPagamento(
+    public PlanoAtendimento mapRow(ResultSet rs, int arg1) throws SQLException {
+        PlanoAtendimento modoPagamento = new PlanoAtendimento(
             rs.getLong("id"),
-            rs.getLong("id_paciente"),
+            null,
             PlanoEnum.valueOf(rs.getString("plano")),
             rs.getBigDecimal("valor"),
-            rs.getInt("dia_do_mes"));
+            rs.getInt("dia_pagamento"));
         return modoPagamento;   
         
     }    

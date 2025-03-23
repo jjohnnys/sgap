@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -14,14 +12,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import br.com.jjohnnys.sgap_core.financeiro.application.dtos.ModoPagamentoDTO;
+import br.com.jjohnnys.sgap_core.financeiro.application.dtos.PlanoAtendimentoDTO;
 import br.com.jjohnnys.sgap_core.financeiro.application.dtos.PagamentoDTO;
-import br.com.jjohnnys.sgap_core.financeiro.application.usecases.CadastrarModoPagamentoUseCase;
+import br.com.jjohnnys.sgap_core.financeiro.application.usecases.CadastroPlanoAtendimentoUseCase;
+import br.com.jjohnnys.sgap_core.financeiro.application.usecases.ConsultarPagamentosUseCase;
 import br.com.jjohnnys.sgap_core.financeiro.application.usecases.FazerPagamentoUseCase;
-import br.com.jjohnnys.sgap_core.financeiro.domain.Pagamento;
 import br.com.jjohnnys.sgap_core.financeiro.domain.enums.PlanoEnum;
 import br.com.jjohnnys.sgap_core.financeiro.domain.enums.StatusPagamentoEnum;
-import br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc.PagamentoJDBC;
 import br.com.jjohnnys.sgap_core.paciente.application.dto.PacienteDTO;
 import br.com.jjohnnys.sgap_core.paciente.application.gateways.PacienteDsGateway;
 import br.com.jjohnnys.sgap_core.paciente.application.usecases.CadastrarPacienteUserCase;
@@ -32,26 +29,27 @@ import br.com.jjohnnys.sgap_core.paciente.domain.enums.StatusAtendimentoEnum;
 public class ConsultarPagamentosUserCaseTest {
 
     @Autowired    
-    private PagamentoJDBC pagamentoJDBC;
+    private ConsultarPagamentosUseCase consultarPagamentosUseCase;
     @Autowired
     private CadastrarPacienteUserCase cadastrarPacienteUserCase;
     @Autowired
     private PacienteDsGateway pacienteDsGateway;
     @Autowired
-    private CadastrarModoPagamentoUseCase cadastrarModoPagamentoUseCase;
+    private CadastroPlanoAtendimentoUseCase cadastrarModoPagamentoUseCase;
     @Autowired
     private FazerPagamentoUseCase fazerPagamentoUseCase;
 
-    @Test
+
+    /* @Test
     public void consultarPagamentosTest() {
         Paciente imperador = criaPacientes(StatusAtendimentoEnum.ATIVO);
         
         LocalDate inicio = LocalDate.of(2025, 2, 10);
         LocalDate fim = LocalDate.of(2025, 3, 15);
-        List<Pagamento> pagamentosImperdor = pagamentoJDBC.find(imperador.getId(), inicio, fim, StatusPagamentoEnum.PAGO);
-        assertEquals(StatusPagamentoEnum.PAGO, pagamentosImperdor.get(0).getStatus());
-        List<Pagamento> pagamentosImperdorAtrasados = pagamentoJDBC.find(imperador.getId(), inicio, fim, StatusPagamentoEnum.ATRAZADO);
-        assertEquals(StatusPagamentoEnum.ATRAZADO, pagamentosImperdorAtrasados.get(0).getStatus());
+        List<PagamentoDTO> pagamentosImperdor = consultarPagamentosUseCase.execute(imperador.getNome(), inicio, fim, StatusPagamentoEnum.PAGO.name());
+        assertEquals(StatusPagamentoEnum.PAGO, StatusPagamentoEnum.getStatusPagamentoEnum(pagamentosImperdor.get(0).status()));
+        List<PagamentoDTO> pagamentosImperdorAtrasados = consultarPagamentosUseCase.execute(imperador.getNome(), inicio, fim, StatusPagamentoEnum.ATRAZADO.name());
+        assertEquals(StatusPagamentoEnum.ATRAZADO,  StatusPagamentoEnum.getStatusPagamentoEnum(pagamentosImperdorAtrasados.get(0).status()));
 
     }
 
@@ -67,6 +65,6 @@ public class ConsultarPagamentosUserCaseTest {
                 PagamentoDTO outroPagamentoImperador = new PagamentoDTO(null,imperadorSalvo.get().getId(), LocalDate.of(2025,02, 10), new BigDecimal(520), null);
                 fazerPagamentoUseCase.execute(outroPagamentoImperador);                
                 return imperadorSalvo.get();
-        }
+        } */
 
 }

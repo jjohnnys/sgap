@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -13,16 +14,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import br.com.jjohnnys.sgap_core.financeiro.application.dtos.ModoPagamentoDTO;
+import br.com.jjohnnys.sgap_core.financeiro.application.dtos.PlanoAtendimentoDTO;
 import br.com.jjohnnys.sgap_core.financeiro.application.dtos.PagamentoDTO;
 import br.com.jjohnnys.sgap_core.financeiro.application.gateways.FinanceiroDsGateways;
-import br.com.jjohnnys.sgap_core.financeiro.application.usecases.CadastrarModoPagamentoUseCase;
+import br.com.jjohnnys.sgap_core.financeiro.application.usecases.CadastroPlanoAtendimentoUseCase;
 import br.com.jjohnnys.sgap_core.financeiro.application.usecases.FazerPagamentoUseCase;
 import br.com.jjohnnys.sgap_core.financeiro.domain.Pagamento;
 import br.com.jjohnnys.sgap_core.financeiro.domain.enums.PlanoEnum;
 import br.com.jjohnnys.sgap_core.financeiro.domain.enums.StatusPagamentoEnum;
 import br.com.jjohnnys.sgap_core.financeiro.domain.exception.DadosFinanceiroException;
-import br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc.ModoPagamentoJDBC;
+import br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc.PlanoAtendimentoJDBC;
 import br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc.PagamentoJDBC;
 import br.com.jjohnnys.sgap_core.paciente.application.dto.PacienteDTO;
 import br.com.jjohnnys.sgap_core.paciente.application.gateways.PacienteDsGateway;
@@ -37,13 +38,13 @@ public class FazerPagamentoUseCaseTest {
     @Autowired
     private CadastrarPacienteUserCase cadastrarPacienteUserCase;
     @Autowired
-    private CadastrarModoPagamentoUseCase cadastrarModoPagamentoUseCase;
+    private CadastroPlanoAtendimentoUseCase cadastrarModoPagamentoUseCase;
     @Autowired
     private PacienteDsGateway pacienteDsGateway;
     @Autowired
     private PacienteJDBC pacienteJDBC;
     @Autowired
-    private ModoPagamentoJDBC modoPagamentoJDBC;
+    private PlanoAtendimentoJDBC modoPagamentoJDBC;
     @Autowired
     private FazerPagamentoUseCase fazerPagamentoUseCase;
     @Autowired
@@ -58,35 +59,33 @@ public class FazerPagamentoUseCaseTest {
     @Test
     public void fazerPagamentoTest() {
         Paciente paciente = criaPaciente(StatusAtendimentoEnum.ATIVO);
-        ModoPagamentoDTO modoPagamentoDTO = new ModoPagamentoDTO(null, paciente.getId(), PlanoEnum.SEMANAL.name(), new BigDecimal(130), 10);
-        cadastrarModoPagamentoUseCase.execute(modoPagamentoDTO);        
-        PagamentoDTO pagamentoDTO = new PagamentoDTO(null, paciente.getId(), LocalDate.of(2025,03, 10), new BigDecimal(520), null);
+        PlanoAtendimentoDTO planoAtendimentoDTO = new PlanoAtendimentoDTO(null, paciente.getId(), PlanoEnum.SEMANAL.name(), new BigDecimal(130), 10);
+        cadastrarModoPagamentoUseCase.execute(planoAtendimentoDTO);        
+        PagamentoDTO pagamentoDTO = new PagamentoDTO(null, paciente.getId(), planoAtendimentoDTO.id(), LocalDate.of(2025,03, 10), new BigDecimal(520));
         fazerPagamentoUseCase.execute(pagamentoDTO);
-
-        Pagamento pagamentoSalvo = pagamentoJDBC.findByIdPaciente(paciente.getId());
-        assertEquals(StatusPagamentoEnum.PAGO, pagamentoSalvo.getStatus());
+        List<Pagamento> pagamentoSalvo = pagamentoJDBC.findByIdPaciente(paciente.getId());
+        assertEquals(StatusPagamentoEnum.PAGO, pagamentoSalvo.get(0).getStatus());
 
     }
 
     @Test
     public void fazerPagamentoAtrasadoTest() {
         Paciente paciente = criaPaciente(StatusAtendimentoEnum.ATIVO);
-        ModoPagamentoDTO modoPagamentoDTO = new ModoPagamentoDTO(null, paciente.getId(), PlanoEnum.SEMANAL.name(), new BigDecimal(130), 10);
-        cadastrarModoPagamentoUseCase.execute(modoPagamentoDTO);        
-        PagamentoDTO pagamentoDTO = new PagamentoDTO(null, paciente.getId(), LocalDate.of(2025,03, 16), new BigDecimal(520), null);
+        PlanoAtendimentoDTO planoAtendimentoDTO = new PlanoAtendimentoDTO(null, paciente.getId(), PlanoEnum.SEMANAL.name(), new BigDecimal(130), 10);
+        cadastrarModoPagamentoUseCase.execute(planoAtendimentoDTO);        
+        PagamentoDTO pagamentoDTO = new PagamentoDTO(null, paciente.getId(), planoAtendimentoDTO.id(), LocalDate.of(2025,03, 16), new BigDecimal(520));
         fazerPagamentoUseCase.execute(pagamentoDTO);
-
-        Pagamento pagamentoSalvo = pagamentoJDBC.findByIdPaciente(paciente.getId());
-        assertEquals(StatusPagamentoEnum.ATRAZADO, pagamentoSalvo.getStatus());
+        List<Pagamento> pagamentoSalvo = pagamentoJDBC.findByIdPaciente(paciente.getId());
+        assertEquals(StatusPagamentoEnum.ATRAZADO, pagamentoSalvo.get(0).getStatus());
 
     }
 
     @Test
     public void deveRetornarErroAoFazerPagamentoDePacienteVoluntario() {
         Paciente paciente = criaPaciente(StatusAtendimentoEnum.ATIVO);
-        ModoPagamentoDTO modoPagamentoDTO = new ModoPagamentoDTO(null, paciente.getId(), PlanoEnum.VOLUNTARIO.name(), new BigDecimal(0), 10);
-        cadastrarModoPagamentoUseCase.execute(modoPagamentoDTO);        
-        PagamentoDTO pagamentoDTO = new PagamentoDTO(null, paciente.getId(), LocalDate.now(), new BigDecimal(520), null);
+        PlanoAtendimentoDTO planoAtendimentoDTO = new PlanoAtendimentoDTO(null, paciente.getId(), PlanoEnum.VOLUNTARIO.name(), new BigDecimal(0), 10);
+        cadastrarModoPagamentoUseCase.execute(planoAtendimentoDTO);        
+        PagamentoDTO pagamentoDTO = new PagamentoDTO(null, paciente.getId(), planoAtendimentoDTO.id(), LocalDate.now(), new BigDecimal(520));
         assertThrows(DadosFinanceiroException.class, () -> fazerPagamentoUseCase.execute(pagamentoDTO));
         
 
@@ -95,10 +94,10 @@ public class FazerPagamentoUseCaseTest {
     @Test
     public void deveRetornarErroAoFazerPagamentoComValorMenor() {
         Paciente paciente = criaPaciente(StatusAtendimentoEnum.ATIVO);
-        ModoPagamentoDTO modoPagamentoDTO = new ModoPagamentoDTO(null, paciente.getId(), PlanoEnum.SEMANAL.name(), new BigDecimal(130
+        PlanoAtendimentoDTO planoAtendimentoDTO = new PlanoAtendimentoDTO(null, paciente.getId(), PlanoEnum.SEMANAL.name(), new BigDecimal(130
         ), 10);
-        cadastrarModoPagamentoUseCase.execute(modoPagamentoDTO);        
-        PagamentoDTO pagamentoDTO = new PagamentoDTO(null, paciente.getId(), LocalDate.now(), new BigDecimal(510), null);
+        cadastrarModoPagamentoUseCase.execute(planoAtendimentoDTO);        
+        PagamentoDTO pagamentoDTO = new PagamentoDTO(null, paciente.getId(), planoAtendimentoDTO.id(), LocalDate.now(), new BigDecimal(510));
         assertThrows(DadosFinanceiroException.class, () -> fazerPagamentoUseCase.execute(pagamentoDTO));
         
 
