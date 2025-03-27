@@ -36,7 +36,7 @@ public class PagamentoJDBC {
     public Pagamento insert(Pagamento pagamento) {
         String sql = "INSERT INTO pagamentos (id_plano_atendimento, data, valor, status) values (:id_plano_atendimento, :data, :valor, :status)";
         jdbcClient.sql(sql)
-        .param("id_plano_atendimento", pagamento.getPlanoAtendimento())
+        .param("id_plano_atendimento", pagamento.getPlanoAtendimento().getId())
         .param("data", pagamento.getData())
         .param("valor", pagamento.getValor())
         .param("status", pagamento.getStatus().name()).update();

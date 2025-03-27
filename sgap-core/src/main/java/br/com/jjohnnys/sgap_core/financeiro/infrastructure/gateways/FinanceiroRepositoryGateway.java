@@ -32,11 +32,8 @@ public class FinanceiroRepositoryGateway implements FinanceiroDsGateways {
     }
 
     @Override
-    public Pagamento savePagamento(Pagamento pagamento) {
-        if(pagamento.getId() == null)
-            return pagamentoJDBC.insert(pagamento);
-        else 
-            return pagamentoJDBC.update(pagamento);
+    public Pagamento savePagamento(Pagamento pagamento) {        
+        return pagamentoJDBC.insert(pagamento);
     }
 
     @Override

@@ -24,10 +24,12 @@ public class CadastroPlanoAtendimentoUseCase {
         Optional<Paciente> paciente = pacienteDsGateway.findPacienteById(planoAtendimentoDTO.idPaciente());
         if(paciente.isEmpty()) throw new DadosFinanceiroException("Paciente invalido");
         PlanoAtendimento planoAtendimento = financeiroDsGateways.findPlanoAtendimentoPorIdPaciente(planoAtendimentoDTO.idPaciente());
-        if(planoAtendimento != null && !planoAtendimento.getPaciente().getId().equals(planoAtendimentoDTO.idPaciente()))
+        if(planoAtendimento == null)
+            planoAtendimento = new PlanoAtendimento(planoAtendimentoDTO.id(), paciente.get(), PlanoEnum.getPlanoEnum(planoAtendimentoDTO.plano()), planoAtendimentoDTO.valor(), planoAtendimentoDTO.diaDoMes());        
+        else if(!planoAtendimento.getId().equals(planoAtendimentoDTO.id()))
             throw new DadosFinanceiroException("Relação Plano atendimento e paciente inválido"); 
         else 
-            planoAtendimento = new PlanoAtendimento(planoAtendimentoDTO.id(), paciente.get(), PlanoEnum.getPlanoEnum(planoAtendimentoDTO.plano()), planoAtendimentoDTO.valor(), planoAtendimentoDTO.diaDoMes());
+            planoAtendimento = new PlanoAtendimento(planoAtendimento.getId(), planoAtendimento.getPaciente(), PlanoEnum.getPlanoEnum(planoAtendimentoDTO.plano()), planoAtendimentoDTO.valor(), planoAtendimentoDTO.diaDoMes());
         planoAtendimento.validaCamposNulos();
         planoAtendimento.validaValor();
         financeiroDsGateways.savePlanoAtendimento(planoAtendimento);

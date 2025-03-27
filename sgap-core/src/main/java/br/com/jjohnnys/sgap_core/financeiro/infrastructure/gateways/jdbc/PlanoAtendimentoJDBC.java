@@ -2,6 +2,7 @@ package br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -24,7 +25,11 @@ public class PlanoAtendimentoJDBC {
     }
 
     public PlanoAtendimento findByIdPaciente(Long nome) {
-        return jdbcClient.sql("SELECT * FROM plano_atendimento WHERE id_paciente = ?").param(nome).query(this::mapRow).single();
+        return jdbcClient.sql("SELECT * FROM plano_atendimento WHERE id_paciente = ?")
+                      .param(nome)
+                      .query(this::mapRow)
+                      .stream().findFirst().orElse(null);
+        
     }
 
     public PlanoAtendimento insert(PlanoAtendimento modoPagamento) {
