@@ -1,7 +1,7 @@
 package br.com.jjohnnys.sgap_core.paciente.infrastructure.gateways;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
@@ -30,7 +30,7 @@ public class PacienteRepositoryGateway implements PacienteDsGateway {
     public Optional<Paciente> findPacienteByNome(String nome) {
         Optional<Paciente> paciente = pacienteJDBC.findByNome(nome);
         if(paciente.isEmpty()) return null;
-        List<Responsavel> responsaveis = responsavelJDBC.findByPacienteId(paciente.get().getId());
+        Set<Responsavel> responsaveis = responsavelJDBC.findByPacienteId(paciente.get().getId());
         responsaveis.stream().forEach(paciente.get()::adicionaResponsavel);
         return paciente;
     }
@@ -67,7 +67,6 @@ public class PacienteRepositoryGateway implements PacienteDsGateway {
 
     @Override
     public void excluiPaciente(Long id) {
-        responsavelJDBC.delete(id);
         pacienteJDBC.delete(id);
     }
 
@@ -75,10 +74,19 @@ public class PacienteRepositoryGateway implements PacienteDsGateway {
     public void excluiResponsavel(Long id) {
         responsavelJDBC.delete(id);
     }
+
+    @Override
+    public void deleteAllresponsaveis() {
+        responsavelJDBC.deleteAll();
+    }
     @Override
     public int updateStatus(Long id, String status) {
         return pacienteJDBC.updateStatus(id, status);
-    }    
-    
+    }
+
+    @Override
+    public int deleteAllPacientes() {
+        return pacienteJDBC.deleteAll();
+    }
     
 }

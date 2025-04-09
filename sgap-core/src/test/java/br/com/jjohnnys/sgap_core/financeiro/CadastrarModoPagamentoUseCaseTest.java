@@ -10,9 +10,15 @@ import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureJdbc;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
+import br.com.jjohnnys.sgap_core.SgapBaseTest;
 import br.com.jjohnnys.sgap_core.financeiro.application.dtos.PlanoAtendimentoDTO;
 import br.com.jjohnnys.sgap_core.financeiro.application.gateways.FinanceiroDsGateways;
 import br.com.jjohnnys.sgap_core.financeiro.application.usecases.CadastroPlanoAtendimentoUseCase;
@@ -28,7 +34,10 @@ import br.com.jjohnnys.sgap_core.paciente.domain.enums.StatusAtendimentoEnum;
 import br.com.jjohnnys.sgap_core.paciente.infrastructure.gateways.jdbc.PacienteJDBC;
 
 @SpringBootTest
-public class CadastrarModoPagamentoUseCaseTest {
+@Transactional
+@AutoConfigureJdbc
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+public class CadastrarModoPagamentoUseCaseTest extends SgapBaseTest {
 
     @Autowired
     private CadastrarPacienteUserCase cadastrarPacienteUserCase;
@@ -38,16 +47,6 @@ public class CadastrarModoPagamentoUseCaseTest {
     private PacienteDsGateway pacienteDsGateway;
     @Autowired
     private FinanceiroDsGateways financeiroDsGateways;
-    @Autowired
-    private PacienteJDBC pacienteJDBC;
-    @Autowired
-    private PlanoAtendimentoJDBC modoPagamentoJDBC;
-
-    @BeforeEach
-    void setUp() {
-        modoPagamentoJDBC.deleteAll();    
-        pacienteJDBC.deleteAll();
-    }
 
 
     @Test

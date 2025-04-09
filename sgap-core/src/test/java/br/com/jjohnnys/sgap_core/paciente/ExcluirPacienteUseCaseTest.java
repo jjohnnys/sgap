@@ -8,24 +8,33 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureJdbc;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
+import br.com.jjohnnys.sgap_core.SgapBaseTest;
 import br.com.jjohnnys.sgap_core.paciente.application.dto.PacienteDTO;
 import br.com.jjohnnys.sgap_core.paciente.application.dto.ResponsavelDTO;
 import br.com.jjohnnys.sgap_core.paciente.application.gateways.PacienteDsGateway;
+import br.com.jjohnnys.sgap_core.paciente.application.usecases.AlterarStatusPacienteUserCase;
 import br.com.jjohnnys.sgap_core.paciente.application.usecases.CadastrarPacienteUserCase;
 import br.com.jjohnnys.sgap_core.paciente.application.usecases.ExcluirPacienteUserCase;
 import br.com.jjohnnys.sgap_core.paciente.domain.Paciente;
 
 @SpringBootTest
-public class ExcluirPacienteUseCaseTest {
+@Transactional
+@AutoConfigureJdbc
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+public class ExcluirPacienteUseCaseTest extends SgapBaseTest {
 
-    @Autowired
-    private ExcluirPacienteUserCase excluirPacienteUserCase;
     @Autowired
     private CadastrarPacienteUserCase  cadastrarPacienteUserCase;
     @Autowired
+    private ExcluirPacienteUserCase excluirPacienteUserCase;
+    @Autowired
     private PacienteDsGateway pacienteDsGateway;
+    @Autowired AlterarStatusPacienteUserCase alterarStatusPacienteUserCase;
 
     @Test
     public void excluiPacienteEResponsavel() {

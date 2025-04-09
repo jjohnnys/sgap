@@ -19,7 +19,8 @@ public class ExcluirPacienteUserCase {
     }
 
     public void execute(Long id) {
-        pacienteDsGateway.findPacienteById(id).orElseThrow(() -> new DadosPacienteException("Paciente não encontrado"));
+        Paciente paciente = pacienteDsGateway.findPacienteById(id).orElseThrow(() -> new DadosPacienteException("Paciente não encontrado"));
+        paciente.getResponsaveis().forEach(responsavel -> pacienteDsGateway.excluiResponsavel(responsavel.getId()));
         pacienteDsGateway.excluiPaciente(id);
     }
 

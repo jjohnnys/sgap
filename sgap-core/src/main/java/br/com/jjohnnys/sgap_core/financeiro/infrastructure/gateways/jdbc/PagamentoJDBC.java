@@ -3,15 +3,12 @@ package br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
-import br.com.jjohnnys.sgap_core.financeiro.application.dtos.PagamentoDTO;
-import br.com.jjohnnys.sgap_core.financeiro.application.dtos.RelatorioPagamentoDTO;
 import br.com.jjohnnys.sgap_core.financeiro.domain.Pagamento;
 import br.com.jjohnnys.sgap_core.financeiro.domain.enums.StatusPagamentoEnum;
 

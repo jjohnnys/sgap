@@ -10,8 +10,13 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureJdbc;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
+import br.com.jjohnnys.sgap_core.SgapBaseTest;
+import br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc.PagamentoJDBC;
 import br.com.jjohnnys.sgap_core.paciente.application.dto.AlteraStatusDto;
 import br.com.jjohnnys.sgap_core.paciente.application.dto.PacienteDTO;
 import br.com.jjohnnys.sgap_core.paciente.application.dto.ResponsavelDTO;
@@ -21,29 +26,18 @@ import br.com.jjohnnys.sgap_core.paciente.application.usecases.CadastrarPaciente
 import br.com.jjohnnys.sgap_core.paciente.domain.Paciente;
 import br.com.jjohnnys.sgap_core.paciente.domain.enums.StatusAtendimentoEnum;
 import br.com.jjohnnys.sgap_core.paciente.domain.exception.DadosPacienteException;
-import br.com.jjohnnys.sgap_core.paciente.infrastructure.gateways.jdbc.PacienteJDBC;
-import br.com.jjohnnys.sgap_core.paciente.infrastructure.gateways.jdbc.ResponsavelJDBC;
 
 @SpringBootTest
-public class CadastrarPacienteUseCaseTest {
+@Transactional
+@AutoConfigureJdbc
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+public class CadastrarPacienteUseCaseTest extends SgapBaseTest {
 
         @Autowired
         private CadastrarPacienteUserCase  cadastrarPacienteUserCase;
         @Autowired
         private PacienteDsGateway pacienteDsGateway;
-        @Autowired
-        private PacienteJDBC pacienteJDBC;
-        @Autowired
-        private ResponsavelJDBC responsavelJDBC;
         @Autowired AlterarStatusPacienteUserCase alterarStatusPacienteUserCase;
-
-
-        @BeforeEach
-        void setUp() {
-                responsavelJDBC.deleteAll();
-                pacienteJDBC.deleteAll();
-        }
-
 
         @Test
         public void criarPacienteTest() {

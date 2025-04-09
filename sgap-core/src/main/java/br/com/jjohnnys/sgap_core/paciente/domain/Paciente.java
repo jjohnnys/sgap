@@ -33,7 +33,7 @@ public class Paciente {
     private StatusAtendimentoEnum status;
     private String observacao;
     private Boolean dependente;
-    private Set<Responsavel> responsaveis;
+    private Set<Responsavel> responsaveis = new HashSet<>();
     private Email email;
     private Set<Telefone> telefones;
     
@@ -42,7 +42,6 @@ public class Paciente {
     }
 
     public Set<Responsavel> getResponsaveis() {
-        if(responsaveis == null) return null;
         return Collections.unmodifiableSet(responsaveis);
     }
 
@@ -59,7 +58,6 @@ public class Paciente {
     }
 
     public void adicionaResponsavel(Responsavel responsavel) { 
-        if(responsaveis == null) responsaveis = new HashSet<>();
         responsaveis.add(responsavel);        
     }
 

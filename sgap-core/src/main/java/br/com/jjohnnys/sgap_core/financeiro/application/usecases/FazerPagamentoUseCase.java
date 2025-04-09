@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.jjohnnys.sgap_core.financeiro.application.dtos.PagamentoDTO;
 import br.com.jjohnnys.sgap_core.financeiro.application.gateways.FinanceiroDsGateways;
@@ -20,6 +21,7 @@ public class FazerPagamentoUseCase {
     @Autowired
     private FinanceiroDsGateways financeiroDsGateways;
 
+    @Transactional    
     public void execute(PagamentoDTO pagamentoDTO) {
         PlanoAtendimento planoAtendimento = financeiroDsGateways.findPlanoAtendimentoPorIdPaciente(pagamentoDTO.getIdPaciente());
         if(!planoAtendimento.getId().equals(pagamentoDTO.getIdPlanoAtendimento()))

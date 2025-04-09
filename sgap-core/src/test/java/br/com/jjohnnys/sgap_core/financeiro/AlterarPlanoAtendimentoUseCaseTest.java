@@ -8,27 +8,31 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureJdbc;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
+import br.com.jjohnnys.sgap_core.SgapBaseTest;
 import br.com.jjohnnys.sgap_core.financeiro.application.dtos.PlanoAtendimentoDTO;
 import br.com.jjohnnys.sgap_core.financeiro.application.gateways.FinanceiroDsGateways;
 import br.com.jjohnnys.sgap_core.financeiro.application.usecases.CadastroPlanoAtendimentoUseCase;
 import br.com.jjohnnys.sgap_core.financeiro.domain.PlanoAtendimento;
 import br.com.jjohnnys.sgap_core.financeiro.domain.enums.PlanoEnum;
 import br.com.jjohnnys.sgap_core.financeiro.domain.exception.DadosFinanceiroException;
-import br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc.PlanoAtendimentoJDBC;
 import br.com.jjohnnys.sgap_core.paciente.application.dto.PacienteDTO;
 import br.com.jjohnnys.sgap_core.paciente.application.gateways.PacienteDsGateway;
 import br.com.jjohnnys.sgap_core.paciente.application.usecases.CadastrarPacienteUserCase;
 import br.com.jjohnnys.sgap_core.paciente.domain.Paciente;
 import br.com.jjohnnys.sgap_core.paciente.domain.enums.StatusAtendimentoEnum;
-import br.com.jjohnnys.sgap_core.paciente.infrastructure.gateways.jdbc.PacienteJDBC;
 
 @SpringBootTest
-public class AlterarPlanoAtendimentoUseCaseTest {
+@Transactional
+@AutoConfigureJdbc
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+public class AlterarPlanoAtendimentoUseCaseTest extends SgapBaseTest {
 
     @Autowired
     private CadastrarPacienteUserCase cadastrarPacienteUserCase;
@@ -40,16 +44,8 @@ public class AlterarPlanoAtendimentoUseCaseTest {
     private PacienteDsGateway pacienteDsGateway;
     @Autowired
     private FinanceiroDsGateways financeiroDsGateways;
-    @Autowired
-    private PacienteJDBC pacienteJDBC;
-    @Autowired
-    private PlanoAtendimentoJDBC planoAtendimentoJDBC;
 
-    @BeforeEach
-    void setUp() {
-        planoAtendimentoJDBC.deleteAll();    
-        pacienteJDBC.deleteAll();
-    }
+    
 
     @Test
     public void alterarplanoAtendimento() {

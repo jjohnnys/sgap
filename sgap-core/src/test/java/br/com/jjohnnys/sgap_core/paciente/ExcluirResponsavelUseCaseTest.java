@@ -8,7 +8,10 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureJdbc;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.jjohnnys.sgap_core.paciente.application.dto.PacienteDTO;
 import br.com.jjohnnys.sgap_core.paciente.application.dto.ResponsavelDTO;
@@ -18,6 +21,9 @@ import br.com.jjohnnys.sgap_core.paciente.application.usecases.ExcluirResponsave
 import br.com.jjohnnys.sgap_core.paciente.domain.Paciente;
 
 @SpringBootTest
+@Transactional
+@AutoConfigureJdbc
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class ExcluirResponsavelUseCaseTest {
 
     @Autowired

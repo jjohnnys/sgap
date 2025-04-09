@@ -1,8 +1,5 @@
 package br.com.jjohnnys.sgap_core.financeiro;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
@@ -11,33 +8,33 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureJdbc;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
-import br.com.jjohnnys.sgap_core.financeiro.application.dtos.PlanoAtendimentoDTO;
+import br.com.jjohnnys.sgap_core.SgapBaseTest;
 import br.com.jjohnnys.sgap_core.financeiro.application.dtos.PagamentoDTO;
-import br.com.jjohnnys.sgap_core.financeiro.application.gateways.FinanceiroDsGateways;
+import br.com.jjohnnys.sgap_core.financeiro.application.dtos.PlanoAtendimentoDTO;
 import br.com.jjohnnys.sgap_core.financeiro.application.usecases.CadastroPlanoAtendimentoUseCase;
 import br.com.jjohnnys.sgap_core.financeiro.application.usecases.ExcluirPagamentoUseCase;
 import br.com.jjohnnys.sgap_core.financeiro.application.usecases.FazerPagamentoUseCase;
 import br.com.jjohnnys.sgap_core.financeiro.domain.Pagamento;
 import br.com.jjohnnys.sgap_core.financeiro.domain.PlanoAtendimento;
 import br.com.jjohnnys.sgap_core.financeiro.domain.enums.PlanoEnum;
-import br.com.jjohnnys.sgap_core.financeiro.domain.enums.StatusPagamentoEnum;
-import br.com.jjohnnys.sgap_core.financeiro.domain.exception.DadosFinanceiroException;
-import br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc.PlanoAtendimentoJDBC;
-import br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc.PagamentoJDBC;
 import br.com.jjohnnys.sgap_core.paciente.application.dto.PacienteDTO;
 import br.com.jjohnnys.sgap_core.paciente.application.gateways.PacienteDsGateway;
 import br.com.jjohnnys.sgap_core.paciente.application.usecases.CadastrarPacienteUserCase;
 import br.com.jjohnnys.sgap_core.paciente.domain.Paciente;
 import br.com.jjohnnys.sgap_core.paciente.domain.enums.StatusAtendimentoEnum;
-import br.com.jjohnnys.sgap_core.paciente.infrastructure.gateways.jdbc.PacienteJDBC;
 
 @SpringBootTest
-public class ExcluirPagamentoUseCaseTest {
+@Transactional
+@AutoConfigureJdbc
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+public class ExcluirPagamentoUseCaseTest extends SgapBaseTest {
 
     @Autowired
     private CadastrarPacienteUserCase cadastrarPacienteUserCase;
@@ -48,20 +45,7 @@ public class ExcluirPagamentoUseCaseTest {
     @Autowired
     private PacienteDsGateway pacienteDsGateway;
     @Autowired
-    private PacienteJDBC pacienteJDBC;
-    @Autowired
-    private PlanoAtendimentoJDBC planoAtendimentoJDBC;
-    @Autowired
-    private FazerPagamentoUseCase fazerPagamentoUseCase;
-    @Autowired
-    private PagamentoJDBC pagamentoJDBC;
-
-    @BeforeEach
-    void setUp() {
-        pagamentoJDBC.deleteAll();
-        planoAtendimentoJDBC.deleteAll();    
-        pacienteJDBC.deleteAll();
-    }
+    private FazerPagamentoUseCase fazerPagamentoUseCase;    
 
     @Test
     public void fazerPagamentoTest() {

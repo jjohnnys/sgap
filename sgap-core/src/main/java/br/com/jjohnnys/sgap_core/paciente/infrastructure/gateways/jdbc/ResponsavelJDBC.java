@@ -1,7 +1,8 @@
 package br.com.jjohnnys.sgap_core.paciente.infrastructure.gateways.jdbc;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
@@ -24,10 +25,10 @@ public class ResponsavelJDBC {
         return jdbcClient.sql("SELECT * FROM responsavel WHERE nome = ?").param(nome).query(new ResponsavelMapper()).optional();
     }
     
-    public List<Responsavel> findByPacienteId(Long idPaciente) {
+    public Set<Responsavel> findByPacienteId(Long idPaciente) {
         String sql = "select r.id, r.nome, r.cpf_cnpj, r.rg, r.fisica_juridica, r.data_nascimento, r.profissao, r.endereco, r.observacao, r.email, r.telefones " + 
                         "from responsavel r left outer join paciente_responsavel pr on r.id = pr.id_responsavel and pr.id_paciente = ?";
-        return jdbcClient.sql(sql).param(idPaciente).query(new ResponsavelMapper()).list();
+        return jdbcClient.sql(sql).param(idPaciente).query(new ResponsavelMapper()).list().stream().collect(Collectors.toSet());
     }
 
     public Responsavel insert(Responsavel responsavel) {
