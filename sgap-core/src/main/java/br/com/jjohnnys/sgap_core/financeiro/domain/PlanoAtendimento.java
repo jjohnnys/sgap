@@ -22,6 +22,12 @@ public class PlanoAtendimento {
             throw new DadosFinanceiroException("Para modo de pagamento todos os campos paciente plano, data: Devem ser preenchidos");
     }
 
+    public void alterarPlanoAtendimento(PlanoEnum plano, BigDecimal valorPorConsulta, Integer diaPagamento) {
+        this.plano = plano;
+        this.valorPorConsulta = valorPorConsulta;
+        this.diaPagamento = diaPagamento;
+    }
+
     public void validaValor() {
         if(PlanoEnum.VOLUNTARIO.equals(this.plano) && this.valorPorConsulta == null)
             return;

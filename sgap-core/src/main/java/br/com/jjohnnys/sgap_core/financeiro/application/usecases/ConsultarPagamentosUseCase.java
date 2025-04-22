@@ -1,6 +1,7 @@
 package br.com.jjohnnys.sgap_core.financeiro.application.usecases;
 
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -19,12 +20,20 @@ public class ConsultarPagamentosUseCase {
 
     
 
-    public List<PagamentoPresenter> executeRelatorio(RelatorioPagamentoDTO relatorioPagamentoDTO) {
+    public PagamentoPresenter execute(RelatorioPagamentoDTO relatorioPagamentoDTO) {
         if(relatorioPagamentoDTO.getAnoInicio() == null && relatorioPagamentoDTO.getAnoFim() == null) {
             relatorioPagamentoDTO.setAnoInicio(LocalDate.now().getYear());
             relatorioPagamentoDTO.setAnoFim(LocalDate.now().getYear());
         }
-        List<PagamentoPresenter> pagamentoPresenters = relatorioPagamentoJDBC.findRelatorio(relatorioPagamentoDTO);        
+        List<PagamentoPresenter.DadosPagamentoPaciente> dadosPagamentoPaciente = relatorioPagamentoJDBC.findRelatorio(relatorioPagamentoDTO); 
+        
+
+        var valorTotal = dadosPagamentoPaciente.stream()
+                .map(PagamentoPresenter.DadosPagamentoPaciente::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        PagamentoPresenter pagamentoPresenters = new PagamentoPresenter();
+        pagamentoPresenters.setTotal(valorTotal);
+        pagamentoPresenters.setDadosPaciente(dadosPagamentoPaciente);
         return pagamentoPresenters;
     }
     

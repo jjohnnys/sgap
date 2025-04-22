@@ -85,12 +85,4 @@ public class CadastrarPacienteUseCaseTest extends SgapBaseTest {
                 AlteraStatusDto alteraStatusDto = new AlteraStatusDto(paciente.getId(), StatusAtendimentoEnum.CONCLUIDO.getValor());
                 assertThrows(DadosPacienteException.class, () -> alterarStatusPacienteUserCase.execute(alteraStatusDto));
         }
-
-
-        private Paciente criaPaciente(StatusAtendimentoEnum status) {
-                PacienteDTO pacienteDTO = new PacienteDTO(null, "Dom Pedro II", "043.153.290-70", "11.111.111-1", 'F', LocalDate.of(1825, 12, 02), "Doutorado", "Masculino", "Imperador", "Rua do Imperador", status.getValor(), "CDF", false, null, "imperador@brasil.com.br", Set.of("21111111111","11111111111"));
-                cadastrarPacienteUserCase.execute(pacienteDTO);
-                Optional<Paciente> pacienteSalvo = pacienteDsGateway.findPacienteByNome("Dom Pedro II");
-                return pacienteSalvo.get();
-        }
 }

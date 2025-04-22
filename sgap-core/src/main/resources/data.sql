@@ -2,6 +2,8 @@ drop table if exists paciente_responsavel;
 drop table if exists responsavel;
 drop table if exists pagamentos;
 drop table if exists plano_atendimento;
+drop table if exists HorariosAtendimentos;
+drop table if exists agenda;
 drop table if exists paciente;
 
 create table paciente (
@@ -56,4 +58,12 @@ create table pagamentos(
     data date,
     valor MONEY,
     status varchar(15)
-)
+);
+
+create table HorariosAtendimentos(
+    id SERIAL PRIMARY KEY,
+    id_paciente SERIAL REFERENCES paciente(id),
+    hora_inicio time,
+    hora_fim time,
+    dia_da_semana varchar(15)
+);

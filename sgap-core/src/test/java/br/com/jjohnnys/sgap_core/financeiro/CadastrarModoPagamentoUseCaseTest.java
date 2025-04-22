@@ -4,47 +4,31 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Optional;
-import java.util.Set;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureJdbc;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.jjohnnys.sgap_core.SgapBaseTest;
 import br.com.jjohnnys.sgap_core.financeiro.application.dtos.PlanoAtendimentoDTO;
 import br.com.jjohnnys.sgap_core.financeiro.application.gateways.FinanceiroDsGateways;
-import br.com.jjohnnys.sgap_core.financeiro.application.usecases.CadastroPlanoAtendimentoUseCase;
+import br.com.jjohnnys.sgap_core.financeiro.application.usecases.InserirPlanoAtendimentoAoCLienteUseCase;
 import br.com.jjohnnys.sgap_core.financeiro.domain.PlanoAtendimento;
 import br.com.jjohnnys.sgap_core.financeiro.domain.enums.PlanoEnum;
 import br.com.jjohnnys.sgap_core.financeiro.domain.exception.DadosFinanceiroException;
-import br.com.jjohnnys.sgap_core.financeiro.infrastructure.gateways.jdbc.PlanoAtendimentoJDBC;
-import br.com.jjohnnys.sgap_core.paciente.application.dto.PacienteDTO;
-import br.com.jjohnnys.sgap_core.paciente.application.gateways.PacienteDsGateway;
-import br.com.jjohnnys.sgap_core.paciente.application.usecases.CadastrarPacienteUserCase;
 import br.com.jjohnnys.sgap_core.paciente.domain.Paciente;
 import br.com.jjohnnys.sgap_core.paciente.domain.enums.StatusAtendimentoEnum;
-import br.com.jjohnnys.sgap_core.paciente.infrastructure.gateways.jdbc.PacienteJDBC;
 
 @SpringBootTest
 @Transactional
 @AutoConfigureJdbc
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class CadastrarModoPagamentoUseCaseTest extends SgapBaseTest {
-
     @Autowired
-    private CadastrarPacienteUserCase cadastrarPacienteUserCase;
-    @Autowired
-    private CadastroPlanoAtendimentoUseCase cadastrarModoPagamentoUseCase;
-    @Autowired
-    private PacienteDsGateway pacienteDsGateway;
+    private InserirPlanoAtendimentoAoCLienteUseCase cadastrarModoPagamentoUseCase;
     @Autowired
     private FinanceiroDsGateways financeiroDsGateways;
 
@@ -80,13 +64,4 @@ public class CadastrarModoPagamentoUseCaseTest extends SgapBaseTest {
         PlanoAtendimentoDTO modoPagamentoDTO = new PlanoAtendimentoDTO(null, paciente.getId(), PlanoEnum.QUINZENAL.name(), new BigDecimal(0), 10);        
         assertThrows(DadosFinanceiroException.class, () -> cadastrarModoPagamentoUseCase.execute(modoPagamentoDTO));
     }
-    
-
-    private Paciente criaPaciente(StatusAtendimentoEnum status) {
-        PacienteDTO pacienteDTO = new PacienteDTO(null, "Dom Pedro II", "043.153.290-70", "11.111.111-1", 'F', LocalDate.of(1825, 12, 02), "Doutorado", "Masculino", "Imperador", "Rua do Imperador", status.getValor(), "CDF", false, null, "imperador@brasil.com.br", Set.of("21111111111","11111111111"));
-        cadastrarPacienteUserCase.execute(pacienteDTO);
-        Optional<Paciente> pacienteSalvo = pacienteDsGateway.findPacienteByNome("Dom Pedro II");
-        return pacienteSalvo.get();
-    }
-
 }

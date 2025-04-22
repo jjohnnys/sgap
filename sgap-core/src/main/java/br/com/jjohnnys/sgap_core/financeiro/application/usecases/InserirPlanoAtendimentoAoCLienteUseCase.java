@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class CadastroPlanoAtendimentoUseCase {
+public class InserirPlanoAtendimentoAoCLienteUseCase {
 
     private final FinanceiroDsGateways financeiroDsGateways;
     private final PacienteDsGateway pacienteDsGateway;
@@ -29,7 +29,7 @@ public class CadastroPlanoAtendimentoUseCase {
         else if(!planoAtendimento.getId().equals(planoAtendimentoDTO.id()))
             throw new DadosFinanceiroException("Relação Plano atendimento e paciente inválido"); 
         else 
-            planoAtendimento = new PlanoAtendimento(planoAtendimento.getId(), planoAtendimento.getPaciente(), PlanoEnum.getPlanoEnum(planoAtendimentoDTO.plano()), planoAtendimentoDTO.valor(), planoAtendimentoDTO.diaDoMes());
+            planoAtendimento.alterarPlanoAtendimento(PlanoEnum.getPlanoEnum(planoAtendimentoDTO.plano()), planoAtendimentoDTO.valor(), planoAtendimentoDTO.diaDoMes());
         planoAtendimento.validaCamposNulos();
         planoAtendimento.validaValor();
         financeiroDsGateways.savePlanoAtendimento(planoAtendimento);

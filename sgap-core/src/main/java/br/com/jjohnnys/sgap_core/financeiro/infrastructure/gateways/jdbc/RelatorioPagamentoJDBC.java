@@ -18,10 +18,10 @@ public class RelatorioPagamentoJDBC {
     @Autowired
     private JdbcClient jdbcClient;
 
-    private String  QUERY_FIND_BY_NOME_PACIENTE = "SELECT pc.nome,  pc.cpf_cnpj, pg.data, pg.valor, pg.status FROM pagamentos pg, plano_atendimento pa, paciente pc WHERE pc.id = pa.id_paciente and pg.id_plano_atendimento = pa.id";
+    private String  QUERY_FIND_BY_NOME_PACIENTE = "SELECT pc.nome as nome,  pc.cpf_cnpj as cpf_cnpj, pg.data as data, pg.valor as valor, pg.status as status FROM pagamentos pg, plano_atendimento pa, paciente pc WHERE pc.id = pa.id_paciente and pg.id_plano_atendimento = pa.id";
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public List<PagamentoPresenter> findRelatorio(RelatorioPagamentoDTO relatorioPagamentoDTO ) {
+    public List<PagamentoPresenter.DadosPagamentoPaciente> findRelatorio(RelatorioPagamentoDTO relatorioPagamentoDTO ) {
 
         StringBuilder query = new StringBuilder();
         List parans = new ArrayList<>();
@@ -57,14 +57,15 @@ public class RelatorioPagamentoJDBC {
         return jdbcClient.sql(query.toString()).params(parans).query(this::mapRow).stream().toList();
     }
 
-    public PagamentoPresenter mapRow(ResultSet rs, int arg1) throws SQLException {
-        PagamentoPresenter pagamentoPresenter = new PagamentoPresenter(
-            rs.getString("pc.nome"), 
-            rs.getString("pc.cpf_cnpj"), 
-            rs.getDate("pg.data"), 
-            rs.getBigDecimal("pg.valor"), 
-            rs.getString("pg.status"));
-        return pagamentoPresenter;
+    public PagamentoPresenter.DadosPagamentoPaciente mapRow(ResultSet rs, int arg1) throws SQLException {
+        PagamentoPresenter pagamentoPresenter = new PagamentoPresenter();
+        PagamentoPresenter.DadosPagamentoPaciente dadosPagamentoPaciente = pagamentoPresenter.new DadosPagamentoPaciente(
+            rs.getString("nome"), 
+            rs.getString("cpf_cnpj"), 
+            rs.getDate("data"), 
+            rs.getBigDecimal("valor"), 
+            rs.getString("status"));
+        return dadosPagamentoPaciente;
         
     }
 }
